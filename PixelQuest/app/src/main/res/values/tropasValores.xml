@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="tropaDistanciaVida">2</integer>
+    <integer name="tropaLigeraVida">5</integer>
+    <integer name="tropaPesadaVida">7</integer>
+    <integer name="tropaBossVida">10</integer>
+
+    <integer name="tropaDistanciaAtaque">1</integer>
+    <integer name="tropaLigeraAtaque">2</integer>
+    <integer name="tropaPesadaAtaque">1</integer>
+    <integer name="tropaBossAtaque">4</integer>
+
+    <integer name="tropaDistanciaVelocidad">2</integer>
+    <integer name="tropaLigeraVelocidad">3</integer>
+    <integer name="tropaPesadaVelocidad">1</integer>
+    <integer name="tropaBossVelocidad">1</integer>
+
+</resources>
