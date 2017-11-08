@@ -53,6 +53,11 @@ public class GameLoop extends Thread {
                                 - tiempoAlInicio;
                         tiempoEspera = (int) (FRAME_TIEMPO - tiempoDiferencial);
 
+                        try{
+                            Thread.sleep(1000);
+                            this.gameView.getControlMana().aumentarMana(1);
+                        } catch (InterruptedException e){}
+
                         if (tiempoEspera > 0) {
                             try {
                                 // Util para ahorrar bateria
@@ -66,7 +71,6 @@ public class GameLoop extends Thread {
                         while (tiempoEspera < 0
                                 && framesSaltados <= MAXIMO_FRAMES_SALTARSE) {
                             this.gameView.actualizar(FRAME_TIEMPO);
-                            tiempoEspera += FRAME_TIEMPO;
                             framesSaltados++;
                             Log.v("GameLoop","GameLoop - Frames saltados "+framesSaltados);
                         }

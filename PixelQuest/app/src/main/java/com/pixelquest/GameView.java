@@ -2,6 +2,7 @@ package com.pixelquest;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -32,6 +33,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Nivel nivel;
     private ControlMana controlMana;
     private ControlVida controlVida;
+    private Handler handler;
 
     public GameView(Context context) {
         super(context);
@@ -151,8 +153,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void actualizar(long tiempo) throws Exception {
-        if (!nivel.isNivelPausado())
+        if (!nivel.isNivelPausado()) {
             nivel.actualizar(tiempo);
+        }
     }
 
     protected void dibujar(Canvas canvas) {
@@ -211,6 +214,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public ControlMana getControlMana() {
+        return controlMana;
     }
 }
 

@@ -3,6 +3,9 @@ package com.pixelquest.modelos.powerups.controles;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 import com.pixelquest.GameView;
@@ -45,5 +48,13 @@ public class ControlMana extends Modelo {
         imagen.setBounds(xIzquierda, yArriva, xIzquierda
                 + getAncho(), yArriva + getAlto());
         imagen.draw(canvas);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setAntiAlias(true);
+        paint.setTextSize(42);
+        paint.setTypeface(Typeface.create("Cambria",Typeface.BOLD));
+        canvas.drawText(String.valueOf(mana), (int) (getX()-getAncho()*0.075)
+                , (int) (getY()+getAlto()*0.3), paint);
     }
 }
