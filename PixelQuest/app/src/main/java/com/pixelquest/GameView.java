@@ -9,6 +9,14 @@ import android.view.SurfaceView;
 import com.pixelquest.modelos.Nivel;
 import com.pixelquest.modelos.powerups.controles.ControlMana;
 import com.pixelquest.modelos.powerups.controles.ControlVida;
+import com.pixelquest.modelos.tropas.botones.BotonTropa;
+import com.pixelquest.modelos.tropas.botones.BotonTropaBoss;
+import com.pixelquest.modelos.tropas.botones.BotonTropaDistancia;
+import com.pixelquest.modelos.tropas.botones.BotonTropaLigera;
+import com.pixelquest.modelos.tropas.botones.BotonTropaPesada;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -18,6 +26,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int pantallaAncho;
     public static int pantallaAlto;
+
+    private List<BotonTropa> botones;
 
     private Nivel nivel;
     private ControlMana controlMana;
@@ -126,22 +136,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     protected void inicializar() throws Exception {
         nivel = new Nivel(context, 1);
-        //inicializarBotonesTropas();
+        this.botones = new LinkedList<>();
+        inicializarBotonesTropas();
         nivel.setGameView(this);
         controlMana = new ControlMana(context);
         controlVida = new ControlVida(context);
     }
 
-    /*private void inicializarBotonesTropas() {
-        this.botonLigera = new BotonTropa(new Aliado(context
-                , new TropaLigeraAliada(context, R.drawable.animacion_cab_azul_atq_abajo)));
-        this.botonPesada = new BotonTropa(new Aliado(context
-                , new TropaPesadaAliada(context, R.drawable.animacion_caballero_abajo)));
-        this.botonDistancia = new BotonTropa(new Aliado(context
-                , new TropaDistanciaAliada(context,R.drawable.animacion_arquero_azul_abajo)));
-        this.botonBoss = new BotonTropa(new Aliado(context
-                , new TropaBossAliada(context, R.drawable.animacion_ballesta_est)));
-    }*/
+    private void inicializarBotonesTropas() {
+        this.botones.add(new BotonTropaLigera(context));
+        this.botones.add(new BotonTropaPesada(context));
+        this.botones.add(new BotonTropaDistancia(context));
+        this.botones.add(new BotonTropaBoss(context));
+    }
 
     public void actualizar(long tiempo) throws Exception {
         if (!nivel.isNivelPausado())
@@ -152,14 +159,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         nivel.dibujar(canvas);
         controlMana.dibujar(canvas);
         controlVida.dibujar(canvas);
-        /*if (!nivel.isNivelPausado()) {
-            botonBoss.dibujar(canvas);
-            botonDistancia.dibujar(canvas);
-            botonLigera.dibujar(canvas);
-            botonPesada.dibujar(canvas);
+        if (!nivel.isNivelPausado()) {
+            for(BotonTropa boton : botones)
+                boton.dibujar(canvas);
         }
         controlMana.dibujar(canvas);
-        controlVida.dibujar(canvas);*/
+        controlVida.dibujar(canvas);
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format

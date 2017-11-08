@@ -18,8 +18,8 @@ public class Fondo extends Modelo {
         super(context,
                 GameView.pantallaAncho/2,
                 GameView.pantallaAlto/2,
-                GameView.pantallaAlto,
-                GameView.pantallaAncho );
+                GameView.pantallaAncho,
+                GameView.pantallaAlto );
 
         this.fondo = imagen;
         if (velocidadX > 0) {

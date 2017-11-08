@@ -1,5 +1,4 @@
-package com.pixelquest.modelos.powerups.controles;
-
+package com.pixelquest.modelos.tropas.botones;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,34 +10,20 @@ import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.modelos.Modelo;
 
 /**
- * Created by Sergio.
+ * Created by Sergio on 08/11/2017.
  */
 
-public class ControlMana extends Modelo {
+public class BotonTropaLigera extends Modelo implements BotonTropa{
 
-    private int mana;
     private Drawable imagen;
 
-    public ControlMana(Context context){
-        super(context, GameView.pantallaAncho*0.1,GameView.pantallaAlto*0.9
+    public BotonTropaLigera(Context context) {
+        super(context, GameView.pantallaAncho*0.3,GameView.pantallaAlto*0.9
                 , (int) (GameView.pantallaAncho*0.2), (int) (GameView.pantallaAlto*0.2));
-        this.mana = 0;
-        imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_mana);
+        imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_ligero);
     }
 
-    public int getMana(){
-        return this.mana;
-    }
-
-    public void aumentarMana(int mana){
-        this.mana+=mana;
-    }
-
-    public void restarMana(int mana) {
-        this.mana -= mana;
-    }
-
-    public void dibujar(Canvas canvas) {
+    public void dibujar(Canvas canvas){
         int yArriva = (int)  getY() - getAlto() / 2;
         int xIzquierda = (int) getX() - getAncho() / 2;
 
