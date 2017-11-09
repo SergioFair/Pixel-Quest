@@ -1,9 +1,6 @@
 package com.pixelquest.modelos;
 
 import android.content.Context;
-import android.graphics.Canvas;
-
-import com.pixelquest.graficos.Sprite;
 
 /**
  * Created by Sergio.

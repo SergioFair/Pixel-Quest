@@ -3,6 +3,7 @@ package com.pixelquest.modelos.tropas.enemigas;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import com.pixelquest.GameView;
 import com.pixelquest.R;
 import com.pixelquest.configuracion.Estados;
 import com.pixelquest.gestores.CargadorGraficos;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Sergio on 26/10/2017.
+ * Created by Sergio.
  */
 
 public class TropaLigeraEnemigo extends AbstractTropa {
@@ -24,8 +25,9 @@ public class TropaLigeraEnemigo extends AbstractTropa {
     private final static String ATACANDO = "atacando";
     private final static String MURIENDO = "muriendo";
 
-    public TropaLigeraEnemigo(Context context){
-        super(context, 0, 0, 40, 44);
+    public TropaLigeraEnemigo(Context context, double y){
+        super(context, GameView.pantallaAncho, y
+                ,GameView.pantallaAlto/9, GameView.pantallaAlto/8);
         setVida(getContext().getResources().getInteger(R.integer.tropaLigeraVida));
         setAtaque(getContext().getResources().getInteger(R.integer.tropaLigeraAtaque));
         setVelocidad(-getContext().getResources().getInteger(R.integer.tropaLigeraVelocidad));

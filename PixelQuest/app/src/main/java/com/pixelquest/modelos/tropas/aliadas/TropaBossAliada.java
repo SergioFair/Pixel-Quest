@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Sergio on 26/10/2017.
+ * Created by Sergio.
  */
 
 public class TropaBossAliada extends AbstractTropa {
@@ -26,7 +26,7 @@ public class TropaBossAliada extends AbstractTropa {
     private final static String MURIENDO = "muriendo";
 
     public TropaBossAliada(Context context, double y){
-        super(context, 0, y, GameView.pantallaAlto/8, GameView.pantallaAlto/8);
+        super(context, 0, y, GameView.pantallaAlto/10, GameView.pantallaAlto/8);
         setVida(getContext().getResources().getInteger(R.integer.tropaBossVida));
         setAtaque(getContext().getResources().getInteger(R.integer.tropaBossAtaque));
         setVelocidad(getContext().getResources().getInteger(R.integer.tropaBossVelocidad));

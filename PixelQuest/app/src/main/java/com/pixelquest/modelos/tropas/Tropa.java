@@ -2,8 +2,6 @@ package com.pixelquest.modelos.tropas;
 
 import android.graphics.Canvas;
 
-import com.pixelquest.modelos.Modelo;
-
 /**
  * Created by Sergio.
  */
@@ -35,4 +33,10 @@ public interface Tropa{
     void dibujar(Canvas canvas);
 
     void actualizar(long tiempo);
+
+    int estaAliadoEnPantalla();
+
+    int estaEnemigoEnPantalla();
+
+    boolean colisiona(Tropa tropa);
 }

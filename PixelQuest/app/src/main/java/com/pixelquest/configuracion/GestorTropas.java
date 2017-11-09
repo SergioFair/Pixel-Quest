@@ -7,6 +7,12 @@ import com.pixelquest.modelos.tropas.aliadas.TropaBossAliada;
 import com.pixelquest.modelos.tropas.aliadas.TropaDistanciaAliada;
 import com.pixelquest.modelos.tropas.aliadas.TropaLigeraAliada;
 import com.pixelquest.modelos.tropas.aliadas.TropaPesadaAliada;
+import com.pixelquest.modelos.tropas.enemigas.TropaBossEnemigo;
+import com.pixelquest.modelos.tropas.enemigas.TropaDistanciaEnemigo;
+import com.pixelquest.modelos.tropas.enemigas.TropaLigeraEnemigo;
+import com.pixelquest.modelos.tropas.enemigas.TropaPesadaEnemigo;
+
+import java.util.Random;
 
 /**
  * Created by Sergio.
@@ -34,7 +40,7 @@ public class GestorTropas {
         this.tropaElegida = valor;
     }
 
-    public Tropa createTropa(Context context, double y){
+    public Tropa createAliado(Context context, double y){
         Tropa tropa = null;
         switch(tropaElegida){
             case LIGERA:
@@ -48,6 +54,26 @@ public class GestorTropas {
                 break;
             case BOSS:
                 tropa = new TropaBossAliada(context, y);
+                break;
+        }
+        return tropa;
+    }
+
+    public Tropa createEnemigo(Context context, double y){
+        Random random = new Random();
+        Tropa tropa = null;
+        switch(random.nextInt(4)){
+            case LIGERA:
+                tropa = new TropaLigeraEnemigo(context, y);
+                break;
+            case DISTANCIA:
+                tropa = new TropaDistanciaEnemigo(context, y);
+                break;
+            case PESADA:
+                tropa = new TropaPesadaEnemigo(context, y);
+                break;
+            case BOSS:
+                tropa = new TropaBossEnemigo(context, y);
                 break;
         }
         return tropa;

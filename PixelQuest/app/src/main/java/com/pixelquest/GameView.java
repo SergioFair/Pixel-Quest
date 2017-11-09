@@ -28,8 +28,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Context context;
     private GameLoop gameLoop;
 
-    public static int pantallaAncho;
-    public static int pantallaAlto;
+    public static int pantallaAncho, pantallaAlto;
+    public static int FIRST_ROW, SECOND_ROW, THIRD_ROW;
 
     private List<BotonTropa> botonesTropas;
     private List<BotonFlecha> botonesFlechas;
@@ -175,9 +175,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void inicializarBotonesFlechas() {
-        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,pantallaAlto*0.25));
-        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,pantallaAlto*0.45));
-        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,pantallaAlto*0.63));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,FIRST_ROW));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,SECOND_ROW));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,THIRD_ROW));
     }
 
     private void inicializarBotonesTropas() {
@@ -216,6 +216,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             , int width, int height) {
         pantallaAncho = width;
         pantallaAlto = height;
+        FIRST_ROW = (int) (pantallaAlto*0.25);
+        SECOND_ROW = (int) (pantallaAlto*0.45);
+        THIRD_ROW = (int) (pantallaAlto*0.63);
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
