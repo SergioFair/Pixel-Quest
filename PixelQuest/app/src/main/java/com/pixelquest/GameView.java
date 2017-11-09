@@ -2,7 +2,6 @@ package com.pixelquest;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -10,14 +9,17 @@ import android.view.SurfaceView;
 import com.pixelquest.modelos.Nivel;
 import com.pixelquest.modelos.powerups.controles.ControlMana;
 import com.pixelquest.modelos.powerups.controles.ControlVida;
-import com.pixelquest.modelos.tropas.botones.BotonTropa;
-import com.pixelquest.modelos.tropas.botones.BotonTropaBoss;
-import com.pixelquest.modelos.tropas.botones.BotonTropaDistancia;
-import com.pixelquest.modelos.tropas.botones.BotonTropaLigera;
-import com.pixelquest.modelos.tropas.botones.BotonTropaPesada;
+import com.pixelquest.modelos.visual.botones.BotonFlecha;
+import com.pixelquest.modelos.visual.botones.BotonTropa;
+import com.pixelquest.modelos.visual.botones.BotonTropaBoss;
+import com.pixelquest.modelos.visual.botones.BotonTropaDistancia;
+import com.pixelquest.modelos.visual.botones.BotonTropaLigera;
+import com.pixelquest.modelos.visual.botones.BotonTropaPesada;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -28,12 +30,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static int pantallaAncho;
     public static int pantallaAlto;
 
-    private List<BotonTropa> botones;
+    private List<BotonTropa> botonesTropas;
+    private List<BotonFlecha> botonesFlechas;
 
     private Nivel nivel;
     private ControlMana controlMana;
     private ControlVida controlVida;
-    private Handler handler;
+    private boolean arrowsEnabled;
 
     public GameView(Context context) {
         super(context);
@@ -104,57 +107,80 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     float y[] = new float[6];
 
     public void procesarEventosTouch() {
-        boolean pulsacionPadMover = false;
 
         for (int i = 0; i < 6; i++) {
             if (accion[i] != NO_ACTION) {
-                if (accion[i] == ACTION_DOWN)
+                if (accion[i] == ACTION_DOWN) {
                     if (nivel.isNivelPausado())
                         nivel.setNivelPausado(false);
-
-                /*if (botonBoss.estaPulsado(x[i], y[i])) {
-                    if (accion[i] == ACTION_DOWN) {
-                        //nivel.botonSaltarPulsado = true;
+                    else {
+                        for (BotonTropa bt : botonesTropas)
+                            if (bt.estaPulsado(x[i], y[i]))
+                                if (!bt.isSelected()
+                                        && bt.getCoste() <= controlMana.getMana()) {
+                                    deseleccionarBotones();
+                                    bt.seleccionar();
+                                    setArrowButtons(true);
+                                } else {
+                                    bt.deseleccionar();
+                                    setArrowButtons(false);
+                                }
                     }
                 }
-                if (botonLigera.estaPulsado(x[i], y[i])) {
-                    if (accion[i] == ACTION_DOWN) {
-                        //nivel.botonSaltarPulsado = true;
-                    }
-                }
-                if (botonDistancia.estaPulsado(x[i], y[i])) {
-                    if (accion[i] == ACTION_DOWN) {
-                        //nivel.botonSaltarPulsado = true;
-                    }
-                }
-                if (botonPesada.estaPulsado(x[i], y[i])) {
-                    if (accion[i] == ACTION_DOWN) {
-                        //nivel.botonSaltarPulsado = true;
-                    }
-                }*/
             }
         }
     }
 
+    private void setArrowButtons(boolean option) {
+        this.arrowsEnabled = option;
+    }
+
+    private void deseleccionarBotones() {
+        for(BotonTropa bt : botonesTropas)
+            bt.deseleccionar();
+    }
+
     protected void inicializar() throws Exception {
         nivel = new Nivel(context, 1);
-        this.botones = new LinkedList<>();
+        this.botonesTropas = new LinkedList<>();
+        this.botonesFlechas = new LinkedList<>();
         inicializarBotonesTropas();
+        inicializarBotonesFlechas();
         nivel.setGameView(this);
         controlMana = new ControlMana(context);
         controlVida = new ControlVida(context);
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                controlMana.aumentarMana(1);
+            }
+        };
+        timer.schedule(timerTask,0,1000);
+    }
+
+    private void inicializarBotonesFlechas() {
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.01,pantallaAlto*0.25));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.01,pantallaAlto*0.45));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.01,pantallaAlto*0.63));
     }
 
     private void inicializarBotonesTropas() {
-        this.botones.add(new BotonTropaLigera(context));
-        this.botones.add(new BotonTropaPesada(context));
-        this.botones.add(new BotonTropaDistancia(context));
-        this.botones.add(new BotonTropaBoss(context));
+        this.botonesTropas.add(new BotonTropaLigera(context));
+        this.botonesTropas.add(new BotonTropaPesada(context));
+        this.botonesTropas.add(new BotonTropaDistancia(context));
+        this.botonesTropas.add(new BotonTropaBoss(context));
     }
 
     public void actualizar(long tiempo) throws Exception {
         if (!nivel.isNivelPausado()) {
             nivel.actualizar(tiempo);
+            for(BotonTropa bt : botonesTropas){
+                if(bt.getCoste() <= controlMana.getMana())
+                    bt.activar();
+                else
+                    bt.desactivar();
+            }
         }
     }
 
@@ -163,11 +189,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         controlMana.dibujar(canvas);
         controlVida.dibujar(canvas);
         if (!nivel.isNivelPausado()) {
-            for(BotonTropa boton : botones)
+            for(BotonTropa boton : botonesTropas)
                 boton.dibujar(canvas);
+            if(arrowsEnabled)
+                for(BotonFlecha bt : botonesFlechas)
+                    bt.dibujar(canvas);
         }
-        controlMana.dibujar(canvas);
-        controlVida.dibujar(canvas);
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format
@@ -183,7 +210,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 iniciado = true;
                 gameLoop = new GameLoop(this);
             }
-
             gameLoop.setRunning(true);
             gameLoop.start();
         } else {

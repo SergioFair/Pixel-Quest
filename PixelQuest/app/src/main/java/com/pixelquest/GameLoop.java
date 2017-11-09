@@ -40,7 +40,6 @@ public class GameLoop extends Thread {
                 canvas = null;
                 try {
                     canvas = this.gameView.getHolder().lockCanvas();
-
                     synchronized (gameView.getHolder()) {
                         tiempoAlInicio = System.currentTimeMillis();
                         this.gameView.actualizar(FRAME_TIEMPO);
@@ -52,11 +51,6 @@ public class GameLoop extends Thread {
                         tiempoDiferencial = System.currentTimeMillis()
                                 - tiempoAlInicio;
                         tiempoEspera = (int) (FRAME_TIEMPO - tiempoDiferencial);
-
-                        try{
-                            Thread.sleep(1000);
-                            this.gameView.getControlMana().aumentarMana(1);
-                        } catch (InterruptedException e){}
 
                         if (tiempoEspera > 0) {
                             try {
@@ -86,5 +80,20 @@ public class GameLoop extends Thread {
             ex.printStackTrace();
             Log.v("ERROR: ", ex.getMessage());
         }
+    }
+
+    public static Thread performOnBackgroundThread(final Runnable runnable) {
+        final Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    runnable.run();
+                } finally {
+
+                }
+            }
+        };
+        t.start();
+        return t;
     }
 }

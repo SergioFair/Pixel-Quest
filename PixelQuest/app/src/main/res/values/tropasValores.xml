@@ -15,4 +15,9 @@
     <integer name="tropaPesadaVelocidad">1</integer>
     <integer name="tropaBossVelocidad">1</integer>
 
+    <integer name="tropaDistanciaCoste">7</integer>
+    <integer name="tropaLigeraCoste">5</integer>
+    <integer name="tropaPesadaCoste">10</integer>
+    <integer name="tropaBossCoste">20</integer>
+
 </resources>
