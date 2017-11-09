@@ -26,9 +26,9 @@ public class TropaLigeraEnemigo extends AbstractTropa {
 
     public TropaLigeraEnemigo(Context context){
         super(context, 0, 0, 40, 44);
-        setVida(R.integer.tropaLigeraVida);
-        setAtaque(R.integer.tropaLigeraAtaque);
-        setVelocidad(R.integer.tropaLigeraVelocidad);
+        setVida(getContext().getResources().getInteger(R.integer.tropaLigeraVida));
+        setAtaque(getContext().getResources().getInteger(R.integer.tropaLigeraAtaque));
+        setVelocidad(-getContext().getResources().getInteger(R.integer.tropaLigeraVelocidad));
         inicializar();
     }
 

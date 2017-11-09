@@ -14,7 +14,7 @@ public interface Tropa{
 
     void restarVida(int vida);
 
-    void mover(int tipoTropa);
+    void mover();
 
     void setEstado(int inactivo);
 

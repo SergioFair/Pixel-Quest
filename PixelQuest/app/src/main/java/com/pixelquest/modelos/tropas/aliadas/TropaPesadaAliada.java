@@ -27,9 +27,9 @@ public class TropaPesadaAliada extends AbstractTropa {
 
     public TropaPesadaAliada(Context context, double y){
         super(context, 0, y, GameView.pantallaAlto/8, GameView.pantallaAlto/8);
-        setVida(R.integer.tropaPesadaVida);
-        setAtaque(R.integer.tropaPesadaAtaque);
-        setVelocidad(R.integer.tropaPesadaVelocidad);
+        setVida(getContext().getResources().getInteger(R.integer.tropaPesadaVida));
+        setAtaque(getContext().getResources().getInteger(R.integer.tropaPesadaAtaque));
+        setVelocidad(getContext().getResources().getInteger(R.integer.tropaPesadaVelocidad));
         inicializar();
     }
 

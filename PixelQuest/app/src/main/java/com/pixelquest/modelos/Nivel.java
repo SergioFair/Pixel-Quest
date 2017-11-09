@@ -26,9 +26,8 @@ public class Nivel {
     private boolean nivelPausado;
     private Fondo fondo;
 
-    public Nivel(Context context, int numeroNivel){
+    public Nivel(Context context){
         this.context = context;
-        this.numeroNivel = 1;
         inicializar();
     }
 
@@ -38,6 +37,7 @@ public class Nivel {
         fondo = new Fondo(context, CargadorGraficos.cargarBitmap(context,
                 R.drawable.background_field), 0);
         this.nivelPausado = false;
+        this.numeroNivel = 1;
     }
 
     public int getNivelActual() {
@@ -81,6 +81,12 @@ public class Nivel {
             t.actualizar(tiempo);
         for(Tropa t: aliados)
             t.actualizar(tiempo);
+        aplicarReglasMovimiento();
+    }
+
+    private void aplicarReglasMovimiento() {
+        for(Tropa t : aliados)
+            t.mover();
     }
 
     public void crearTropa(double y) {

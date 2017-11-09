@@ -27,9 +27,9 @@ public class TropaBossAliada extends AbstractTropa {
 
     public TropaBossAliada(Context context, double y){
         super(context, 0, y, GameView.pantallaAlto/8, GameView.pantallaAlto/8);
-        setVida(R.integer.tropaBossVida);
-        setAtaque(R.integer.tropaBossAtaque);
-        setVelocidad(R.integer.tropaBossVelocidad);
+        setVida(getContext().getResources().getInteger(R.integer.tropaBossVida));
+        setAtaque(getContext().getResources().getInteger(R.integer.tropaBossAtaque));
+        setVelocidad(getContext().getResources().getInteger(R.integer.tropaBossVelocidad));
         inicializar();
     }
 

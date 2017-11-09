@@ -27,9 +27,9 @@ public class TropaDistanciaAliada extends AbstractTropa {
 
     public TropaDistanciaAliada(Context context, double y){
         super(context, 0, y, GameView.pantallaAlto/8, GameView.pantallaAlto/8);
-        setVida(R.integer.tropaDistanciaVida);
-        setAtaque(R.integer.tropaDistanciaAtaque);
-        setVelocidad(R.integer.tropaDistanciaVelocidad);
+        setVida(getContext().getResources().getInteger(R.integer.tropaDistanciaVida));
+        setAtaque(getContext().getResources().getInteger(R.integer.tropaDistanciaAtaque));
+        setVelocidad(getContext().getResources().getInteger(R.integer.tropaDistanciaVelocidad));
         inicializar();
     }
 

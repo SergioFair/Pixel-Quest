@@ -156,7 +156,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     protected void inicializar() throws Exception {
-        nivel = new Nivel(context, 1);
+        nivel = new Nivel(context);
         this.botonesTropas = new LinkedList<>();
         this.botonesFlechas = new LinkedList<>();
         inicializarBotonesTropas();

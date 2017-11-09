@@ -34,8 +34,8 @@ public abstract class AbstractTropa extends Modelo implements Tropa {
 
     public void setAtaque(int ataque) {this.ataque = ataque;}
 
-    public void mover(int tipoTropa){
-        acelerar(this.velocidad*tipoTropa);
+    public void mover(){
+        acelerar(this.velocidad);
     }
 
     public double getVelocidad(){

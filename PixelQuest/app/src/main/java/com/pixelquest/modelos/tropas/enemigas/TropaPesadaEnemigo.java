@@ -26,9 +26,9 @@ public class TropaPesadaEnemigo extends AbstractTropa {
 
     public TropaPesadaEnemigo(Context context){
         super(context, 0, 0, 285, 380);
-        setVida(R.integer.tropaPesadaVida);
-        setAtaque(R.integer.tropaPesadaAtaque);
-        setVelocidad(R.integer.tropaPesadaVelocidad);
+        setVida(getContext().getResources().getInteger(R.integer.tropaPesadaVida));
+        setAtaque(getContext().getResources().getInteger(R.integer.tropaPesadaAtaque));
+        setVelocidad(-getContext().getResources().getInteger(R.integer.tropaPesadaVelocidad));
         inicializar();
     }
 
