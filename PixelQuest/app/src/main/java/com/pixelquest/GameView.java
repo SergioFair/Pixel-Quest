@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.pixelquest.configuracion.GestorTropas;
 import com.pixelquest.modelos.Nivel;
 import com.pixelquest.modelos.powerups.controles.ControlMana;
 import com.pixelquest.modelos.powerups.controles.ControlVida;
@@ -115,16 +116,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         nivel.setNivelPausado(false);
                     else {
                         for (BotonTropa bt : botonesTropas)
-                            if (bt.estaPulsado(x[i], y[i]))
+                            if (bt.estaPulsado(x[i], y[i])) {
                                 if (!bt.isSelected()
                                         && bt.getCoste() <= controlMana.getMana()) {
                                     deseleccionarBotones();
                                     bt.seleccionar();
                                     setArrowButtons(true);
+                                    GestorTropas.getInstance()
+                                            .setTropaElegida(botonesTropas.indexOf(bt));
                                 } else {
                                     bt.deseleccionar();
                                     setArrowButtons(false);
+                                    GestorTropas.getInstance().setTropaElegida(-1);
                                 }
+                            }
+                        for(BotonFlecha bt : botonesFlechas){
+                            if(bt.estaPulsado(x[i],y[i])) {
+                                nivel.crearTropa(bt.getY());
+                                controlMana.restarMana(botonesTropas.get(
+                                        GestorTropas.getInstance().getTropaElegida()).getCoste());
+                                this.arrowsEnabled = false;
+                                GestorTropas.getInstance().setTropaElegida(-1);
+                                deseleccionarBotones();
+                            }
+                        }
                     }
                 }
             }
@@ -160,15 +175,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void inicializarBotonesFlechas() {
-        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.01,pantallaAlto*0.25));
-        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.01,pantallaAlto*0.45));
-        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.01,pantallaAlto*0.63));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,pantallaAlto*0.25));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,pantallaAlto*0.45));
+        this.botonesFlechas.add(new BotonFlecha(context,pantallaAncho*0.025,pantallaAlto*0.63));
     }
 
     private void inicializarBotonesTropas() {
         this.botonesTropas.add(new BotonTropaLigera(context));
-        this.botonesTropas.add(new BotonTropaPesada(context));
         this.botonesTropas.add(new BotonTropaDistancia(context));
+        this.botonesTropas.add(new BotonTropaPesada(context));
         this.botonesTropas.add(new BotonTropaBoss(context));
     }
 
@@ -185,15 +200,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     protected void dibujar(Canvas canvas) {
-        nivel.dibujar(canvas);
-        controlMana.dibujar(canvas);
-        controlVida.dibujar(canvas);
         if (!nivel.isNivelPausado()) {
+            nivel.dibujar(canvas);
+            controlMana.dibujar(canvas);
             for(BotonTropa boton : botonesTropas)
                 boton.dibujar(canvas);
             if(arrowsEnabled)
                 for(BotonFlecha bt : botonesFlechas)
                     bt.dibujar(canvas);
+            controlVida.dibujar(canvas);
         }
     }
 

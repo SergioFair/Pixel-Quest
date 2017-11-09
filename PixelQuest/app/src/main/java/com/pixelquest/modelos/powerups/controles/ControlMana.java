@@ -54,7 +54,7 @@ public class ControlMana extends Modelo {
         paint.setAntiAlias(true);
         paint.setTextSize(42);
         paint.setTypeface(Typeface.create("Cambria",Typeface.BOLD));
-        canvas.drawText(String.valueOf(mana), (int) (getX()-getAncho()*0.075)
+        canvas.drawText(String.valueOf(mana), (int) (getX()*0.9)
                 , (int) (getY()+getAlto()*0.3), paint);
     }
 }

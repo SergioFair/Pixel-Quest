@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 
 import com.pixelquest.GameView;
 import com.pixelquest.R;
+import com.pixelquest.configuracion.GestorTropas;
 import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.modelos.tropas.Tropa;
 import com.pixelquest.modelos.visual.Fondo;
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Sergio on 01/11/2017.
+ * Created by Sergio.
  */
 
 public class Nivel {
@@ -36,6 +37,7 @@ public class Nivel {
         this.aliados = new LinkedList<>();
         fondo = new Fondo(context, CargadorGraficos.cargarBitmap(context,
                 R.drawable.background_field), 0);
+        this.nivelPausado = false;
     }
 
     public int getNivelActual() {
@@ -79,5 +81,10 @@ public class Nivel {
             t.actualizar(tiempo);
         for(Tropa t: aliados)
             t.actualizar(tiempo);
+    }
+
+    public void crearTropa(double y) {
+        if(GestorTropas.getInstance().isTropaElegida())
+            aliados.add(GestorTropas.getInstance().createTropa(this.context, y));
     }
 }

@@ -24,7 +24,7 @@ public class TropaBossEnemigo extends AbstractTropa {
     private final static String ATACANDO = "atacando";
     private final static String MURIENDO = "muriendo";
 
-    public TropaBossEnemigo(Context context, int drawable){
+    public TropaBossEnemigo(Context context){
         super(context, 0, 0, 234, 380);
         setVida(R.integer.tropaBossVida);
         setAtaque(R.integer.tropaBossAtaque);

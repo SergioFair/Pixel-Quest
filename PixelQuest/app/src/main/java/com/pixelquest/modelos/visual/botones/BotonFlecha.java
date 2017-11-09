@@ -9,7 +9,7 @@ import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.modelos.Modelo;
 
 /**
- * Created by Sergio on 09/11/2017.
+ * Created by Sergio.
  */
 
 public class BotonFlecha extends Modelo {
@@ -28,5 +28,15 @@ public class BotonFlecha extends Modelo {
         imagen.setBounds(xIzquierda, yArriva, xIzquierda
                 + getAncho(), yArriva + getAlto());
         imagen.draw(canvas);
+    }
+
+    public boolean estaPulsado(float clickX, float clickY) {
+        boolean estaPulsado = false;
+
+        if (clickX <= (getX() + getAncho() / 2) && clickX >= (getX() - getAncho() / 2)
+                && clickY <= (getY() + getAlto() / 2) && clickY >= (getY() - getAlto() / 2)) {
+            estaPulsado = true;
+        }
+        return estaPulsado;
     }
 }

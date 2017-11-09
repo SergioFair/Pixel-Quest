@@ -3,6 +3,7 @@ package com.pixelquest.modelos.tropas.aliadas;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import com.pixelquest.GameView;
 import com.pixelquest.R;
 import com.pixelquest.configuracion.Estados;
 import com.pixelquest.gestores.CargadorGraficos;
@@ -24,8 +25,8 @@ public class TropaLigeraAliada extends AbstractTropa {
     private final static String ATACANDO = "atacando";
     private final static String MURIENDO = "muriendo";
 
-    public TropaLigeraAliada(Context context, int drawable){
-        super(context, 0, 0, 277, 380);
+    public TropaLigeraAliada(Context context, double y){
+        super(context, 0, y, GameView.pantallaAlto/8, GameView.pantallaAlto/8);
         setVida(R.integer.tropaLigeraVida);
         setAtaque(R.integer.tropaLigeraAtaque);
         setVelocidad(R.integer.tropaLigeraVelocidad);

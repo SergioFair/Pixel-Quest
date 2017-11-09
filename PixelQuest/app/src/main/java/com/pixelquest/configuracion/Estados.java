@@ -10,7 +10,4 @@ public class Estados {
     public final static int DESTRUIDO = 1;
     public final static int ATACANDO = 2;
     public final static int INACTIVO = -1;
-
-    public final static int ENEMIGO = -1;
-    public final static int ALIADO = 1;
 }
