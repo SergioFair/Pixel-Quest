@@ -31,6 +31,7 @@ public class TropaBossEnemigo extends AbstractTropa {
         setVida(getContext().getResources().getInteger(R.integer.tropaBossVida));
         setAtaque(getContext().getResources().getInteger(R.integer.tropaBossAtaque));
         setVelocidad(-getContext().getResources().getInteger(R.integer.tropaBossVelocidad));
+        this.velocidadInicial = -getContext().getResources().getInteger(R.integer.tropaBossVelocidad);
         inicializar();
     }
 
@@ -45,12 +46,12 @@ public class TropaBossEnemigo extends AbstractTropa {
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_boss_enemigo_atq) , 439, getAlto()
-                , 7, 7, true);
+                , 7, 7, false);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_muerte_defecto) , 315, getAlto()
-                , 4, 4, true);
+                , 4, 4, false);
         sprites.put(MURIENDO, actual);
     }
 
@@ -61,9 +62,9 @@ public class TropaBossEnemigo extends AbstractTropa {
 
     @Override
     public void actualizar(long tiempo) {
-        boolean finSprite = sprite.actualizar(tiempo);
+        this.spriteFinalizado = sprite.actualizar(tiempo);
 
-        if (getEstado() == Estados.INACTIVO && finSprite){
+        if (getEstado() == Estados.INACTIVO && this.spriteFinalizado){
             setEstado(Estados.DESTRUIDO);
         }
 

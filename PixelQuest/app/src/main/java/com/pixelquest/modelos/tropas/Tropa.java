@@ -39,4 +39,8 @@ public interface Tropa{
     int estaEnemigoEnPantalla();
 
     boolean colisiona(Tropa tropa);
+
+    boolean isSpriteFinalizado();
+
+    int getVelocidadInicial();
 }

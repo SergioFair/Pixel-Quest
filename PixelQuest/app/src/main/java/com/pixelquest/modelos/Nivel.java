@@ -47,8 +47,6 @@ public class Nivel {
                 , GameView.SECOND_ROW));
         this.enemigos.add(GestorTropas.getInstance().createEnemigo(context
                 , GameView.THIRD_ROW));
-        this.enemigos.add(GestorTropas.getInstance().createEnemigo(context
-                , GameView.FIRST_ROW));
         this.nivelActual = 1;
     }
 
@@ -109,27 +107,38 @@ public class Nivel {
 
     private void aplicarReglasMovimiento() {
         Tropa t, aux;
-        for(Iterator<Tropa> iterator = enemigos.iterator();
-            iterator.hasNext(); ) {
-            t = iterator.next();
-            if(t.estaEnemigoEnPantalla()==-1)
+        for (Tropa enemigo : enemigos) {
+            t = enemigo;
+            if (t.estaEnemigoEnPantalla() == -1)
                 t.setEstado(Estados.DESTRUIDO);
             t.mover();
-            for(Iterator<Tropa> iteratorAliado = aliados.iterator();
-                iteratorAliado.hasNext(); ) {
-                aux = iteratorAliado.next();
-                if (t.colisiona(aux))
-                    t.setEstado(Estados.DESTRUIDO);
+            for (Tropa aliado : aliados) {
+                aux = aliado;
+                if (aux.estaAliadoEnPantalla() == -1)
+                    aux.setEstado(Estados.DESTRUIDO);
+                aux.mover();
+                if (t.colisiona(aux)) {
+                    t.setVelocidad(0);
+                    aux.setVelocidad(0);
+                    t.setEstado(Estados.ATACANDO);
+                    aux.setEstado(Estados.ATACANDO);
+                    if (t.isSpriteFinalizado() && aux.getEstado() == Estados.ATACANDO)
+                        t.atacar(aux);
+                    if (aux.isSpriteFinalizado() && t.getEstado() == Estados.ATACANDO)
+                        aux.atacar(t);
+                    if(aux.getVida() <= 0) {
+                        aux.setEstado(Estados.INACTIVO);
+                        t.setEstado(Estados.ACTIVO);
+                        t.setVelocidad(t.getVelocidadInicial());
+                    }
+                    if(t.getVida() <= 0) {
+                        t.setEstado(Estados.INACTIVO);
+                        aux.setEstado(Estados.ACTIVO);
+                        aux.setVelocidad(aux.getVelocidadInicial());
+                    }
+                }
             }
         }
-        for(Iterator<Tropa> iterator = aliados.iterator();
-            iterator.hasNext(); ){
-            t = iterator.next();
-            if(t.estaAliadoEnPantalla()==-1)
-                t.setEstado(Estados.DESTRUIDO);
-            t.mover();
-        }
-
     }
 
     public void crearTropa(double y) {

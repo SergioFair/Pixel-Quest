@@ -31,6 +31,7 @@ public class TropaDistanciaEnemigo extends AbstractTropa {
         setVida(getContext().getResources().getInteger(R.integer.tropaDistanciaVida));
         setAtaque(getContext().getResources().getInteger(R.integer.tropaDistanciaAtaque));
         setVelocidad(-getContext().getResources().getInteger(R.integer.tropaDistanciaVelocidad));
+        this.velocidadInicial = -getContext().getResources().getInteger(R.integer.tropaDistanciaVelocidad);
         inicializar();
     }
 
@@ -61,9 +62,9 @@ public class TropaDistanciaEnemigo extends AbstractTropa {
 
     @Override
     public void actualizar(long tiempo) {
-        boolean finSprite = sprite.actualizar(tiempo);
+        this.spriteFinalizado = sprite.actualizar(tiempo);
 
-        if (getEstado() == Estados.INACTIVO && finSprite){
+        if (getEstado() == Estados.INACTIVO && this.spriteFinalizado){
             setEstado(Estados.DESTRUIDO);
         }
 

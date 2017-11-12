@@ -13,6 +13,8 @@ public abstract class AbstractTropa extends Modelo implements Tropa {
 
     private int vida, ataque, estado;
     private double velocidad;
+    protected int velocidadInicial;
+    protected boolean spriteFinalizado;
 
     public AbstractTropa(Context context, double x, double y, int ancho, int alto) {
         super(context, x, y, ancho, alto);
@@ -86,5 +88,13 @@ public abstract class AbstractTropa extends Modelo implements Tropa {
             }
         }
         return result;
+    }
+
+    public boolean isSpriteFinalizado(){
+        return this.spriteFinalizado;
+    }
+
+    public int getVelocidadInicial(){
+        return this.velocidadInicial;
     }
 }

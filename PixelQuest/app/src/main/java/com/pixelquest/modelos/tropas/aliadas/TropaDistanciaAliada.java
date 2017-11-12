@@ -30,6 +30,7 @@ public class TropaDistanciaAliada extends AbstractTropa {
         setVida(getContext().getResources().getInteger(R.integer.tropaDistanciaVida));
         setAtaque(getContext().getResources().getInteger(R.integer.tropaDistanciaAtaque));
         setVelocidad(getContext().getResources().getInteger(R.integer.tropaDistanciaVelocidad));
+        this.velocidadInicial = getContext().getResources().getInteger(R.integer.tropaDistanciaVelocidad);
         inicializar();
     }
 
@@ -44,12 +45,12 @@ public class TropaDistanciaAliada extends AbstractTropa {
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_distancia_aliado_atq) , getAncho(), getAlto()
-                , 6, 6, true);
+                , 6, 6, false);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_distancia_aliado_muerte) , getAncho(), getAlto()
-                , 7, 7, true);
+                , 7, 7, false);
         sprites.put(MURIENDO, actual);
     }
 
@@ -60,9 +61,9 @@ public class TropaDistanciaAliada extends AbstractTropa {
 
     @Override
     public void actualizar(long tiempo) {
-        boolean finSprite = sprite.actualizar(tiempo);
+        this.spriteFinalizado = sprite.actualizar(tiempo);
 
-        if (getEstado() == Estados.INACTIVO && finSprite){
+        if (getEstado() == Estados.INACTIVO && this.spriteFinalizado){
             setEstado(Estados.DESTRUIDO);
         }
 

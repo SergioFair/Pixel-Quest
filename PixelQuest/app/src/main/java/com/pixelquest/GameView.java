@@ -131,7 +131,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                 }
                             }
                         for(BotonFlecha bt : botonesFlechas){
-                            if(bt.estaPulsado(x[i],y[i])) {
+                            if(bt.estaPulsado(x[i],y[i]) && arrowsEnabled) {
                                 nivel.crearTropa(bt.getY());
                                 controlMana.restarMana(botonesTropas.get(
                                         GestorTropas.getInstance().getTropaElegida()).getCoste());
