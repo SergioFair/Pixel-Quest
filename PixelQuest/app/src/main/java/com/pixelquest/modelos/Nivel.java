@@ -41,13 +41,6 @@ public class Nivel {
                 R.drawable.background_field), 0);
         this.nivelPausado = false;
         this.nivelActual = 1;
-        this.enemigos.add(GestorTropas.getInstance().createEnemigo(context
-                , GameView.FIRST_ROW));
-        this.enemigos.add(GestorTropas.getInstance().createEnemigo(context
-                , GameView.SECOND_ROW));
-        this.enemigos.add(GestorTropas.getInstance().createEnemigo(context
-                , GameView.THIRD_ROW));
-        this.nivelActual = 1;
     }
 
     public int getNivelActual() {
@@ -64,10 +57,6 @@ public class Nivel {
 
     public void setGameView(GameView gameView) {
         this.gameView = gameView;
-    }
-
-    public GameView getGameView(){
-        return this.gameView;
     }
 
     public void dibujar(Canvas canvas) {
@@ -118,14 +107,18 @@ public class Nivel {
                     aux.setEstado(Estados.DESTRUIDO);
                 aux.mover();
                 if (t.colisiona(aux)) {
-                    t.setVelocidad(0);
-                    aux.setVelocidad(0);
-                    t.setEstado(Estados.ATACANDO);
-                    aux.setEstado(Estados.ATACANDO);
-                    if (t.isSpriteFinalizado() && aux.getEstado() == Estados.ATACANDO)
+                    if (t.isSpriteFinalizado() && aux.getEstado() != Estados.INACTIVO
+                            && t.getEstado() != Estados.DESTRUIDO) {
+                        t.setEstado(Estados.ATACANDO);
+                        t.setVelocidad(0);
                         t.atacar(aux);
-                    if (aux.isSpriteFinalizado() && t.getEstado() == Estados.ATACANDO)
+                    }
+                    if (aux.isSpriteFinalizado() && t.getEstado() != Estados.INACTIVO
+                            && t.getEstado() != Estados.DESTRUIDO) {
+                        aux.setVelocidad(0);
+                        aux.setEstado(Estados.ATACANDO);
                         aux.atacar(t);
+                    }
                     if(aux.getVida() <= 0) {
                         aux.setEstado(Estados.INACTIVO);
                         t.setEstado(Estados.ACTIVO);
@@ -141,8 +134,16 @@ public class Nivel {
         }
     }
 
-    public void crearTropa(double y) {
+    public void crearTropaAliada(double y) {
         if(GestorTropas.getInstance().isTropaElegida())
             aliados.add(GestorTropas.getInstance().createAliado(this.context, y));
+    }
+
+    public void crearTropaEnemiga(double y, int tipoEnemigo) {
+        enemigos.add(GestorTropas.getInstance().createEnemigo(this.context, y, tipoEnemigo));
+    }
+
+    public List<Tropa> getEnemigos() {
+        return enemigos;
     }
 }

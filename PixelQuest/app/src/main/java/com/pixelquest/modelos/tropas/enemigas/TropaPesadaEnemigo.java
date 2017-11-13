@@ -45,12 +45,12 @@ public class TropaPesadaEnemigo extends AbstractTropa {
         sprite = actual;
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
-                , R.drawable.animacion_pesado_enemigo_atq) , 403, getAlto()
-                , 7, 7, false);
+                , R.drawable.animacion_pesado_enemigo_atq) , getAncho(), getAlto()
+                , 7, 7, true);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
-                , R.drawable.animacion_muerte_defecto) , 315, getAlto()
+                , R.drawable.animacion_muerte_defecto) , getAncho(), getAlto()
                 , 4, 4, false);
         sprites.put(MURIENDO, actual);
     }

@@ -62,6 +62,7 @@ public class Sprite {
             frameActual++;
             if (frameActual >= framesTotales) {
                 if (bucle){
+                    finSprite = true;
                     frameActual = 0;
                 } else {
                     frameActual = framesTotales;
@@ -81,7 +82,6 @@ public class Sprite {
         Paint efectoTransparente = new Paint();
         if (alpha)
             efectoTransparente.setAlpha(150);
-
         Rect destRect = new Rect(x - modeloAncho/2, y - modeloAltura/2, x
                 + modeloAncho/2, y + modeloAltura/2);
         canvas.drawBitmap(bitmap, rectanguloDibujo, destRect, efectoTransparente);

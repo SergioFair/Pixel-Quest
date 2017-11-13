@@ -46,7 +46,7 @@ public class TropaLigeraEnemigo extends AbstractTropa {
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_ligero_enemigo_atq) , getAncho(), getAlto()
-                , 6, 6, false);
+                , 6, 6, true);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()

@@ -59,10 +59,9 @@ public class GestorTropas {
         return tropa;
     }
 
-    public Tropa createEnemigo(Context context, double y){
-        Random random = new Random();
+    public Tropa createEnemigo(Context context, double y, int tipoEnemigo){
         Tropa tropa = null;
-        switch(random.nextInt(4)){
+        switch(tipoEnemigo){
             case LIGERA:
                 tropa = new TropaLigeraEnemigo(context, y);
                 break;

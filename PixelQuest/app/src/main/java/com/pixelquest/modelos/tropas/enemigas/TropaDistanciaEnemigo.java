@@ -45,13 +45,13 @@ public class TropaDistanciaEnemigo extends AbstractTropa {
         sprite = actual;
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
-                , R.drawable.animacion_distancia_enemigo_atq) , 432, getAlto()
+                , R.drawable.animacion_distancia_enemigo_atq) , getAncho(), getAlto()
                 , 7, 7, true);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
-                , R.drawable.animacion_muerte_defecto) , 315, getAlto()
-                , 4, 4, true);
+                , R.drawable.animacion_muerte_defecto) , getAncho(), getAlto()
+                , 4, 4, false);
         sprites.put(MURIENDO, actual);
     }
 

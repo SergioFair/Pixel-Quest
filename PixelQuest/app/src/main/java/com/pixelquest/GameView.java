@@ -19,6 +19,7 @@ import com.pixelquest.modelos.visual.botones.BotonTropaPesada;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,6 +39,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private ControlMana controlMana;
     private ControlVida controlVida;
     private boolean arrowsEnabled;
+    private Random random;
+    private int randtime;
 
     public GameView(Context context) {
         super(context);
@@ -132,7 +135,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                             }
                         for(BotonFlecha bt : botonesFlechas){
                             if(bt.estaPulsado(x[i],y[i]) && arrowsEnabled) {
-                                nivel.crearTropa(bt.getY());
+                                nivel.crearTropaAliada(bt.getY());
                                 controlMana.restarMana(botonesTropas.get(
                                         GestorTropas.getInstance().getTropaElegida()).getCoste());
                                 this.arrowsEnabled = false;
@@ -164,14 +167,38 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         nivel.setGameView(this);
         controlMana = new ControlMana(context);
         controlVida = new ControlVida(context);
+        random = new Random();
+        randtime = random.nextInt(5000)+7000;
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                int randEnemy = random.nextInt(4)
+                        , randRow = random.nextInt(3);
+                int row = FIRST_ROW;
+                switch(randRow){
+                    case 0:
+                        row = FIRST_ROW;
+                        break;
+                    case 1:
+                        row = SECOND_ROW;
+                        break;
+                    case 2:
+                        row = THIRD_ROW;
+                        break;
+                }
+                if(nivel.getEnemigos().size()<5)
+                    nivel.crearTropaEnemiga(row, randEnemy);
+            }
+        };
+        TimerTask timerTask2 = new TimerTask() {
             @Override
             public void run() {
                 controlMana.aumentarMana(1);
             }
         };
-        timer.schedule(timerTask,0,1000);
+        timer.schedule(timerTask,0,randtime);
+        timer.schedule(timerTask2,0,1000);
     }
 
     private void inicializarBotonesFlechas() {

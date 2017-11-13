@@ -45,7 +45,7 @@ public class TropaDistanciaAliada extends AbstractTropa {
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_distancia_aliado_atq) , getAncho(), getAlto()
-                , 6, 6, false);
+                , 6, 6, true);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
