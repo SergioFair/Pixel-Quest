@@ -38,19 +38,19 @@ public class TropaBossAliada extends AbstractTropa {
         this.sprites = new HashMap<>();
         Sprite actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_boss_aliado_mov) , getAncho(), getAlto()
-                , 4, 4, true);
+                , 1, 4, true);
         sprites.put(MOVIENDOSE, actual);
 
         sprite = actual;
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_boss_aliado_atq) , getAncho(), getAlto()
-                , 7, 7, true);
+                , 1, 7, true);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_muerte_defecto) , getAncho(), getAlto()
-                , 4, 4, false);
+                , 1, 4, false);
         sprites.put(MURIENDO, actual);
     }
 

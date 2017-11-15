@@ -58,6 +58,7 @@ public class GameLoop extends Thread {
                                 Log.v("GameLoop","GameLoop - Tiempo de espera "+tiempoEspera);
                                 Thread.sleep(tiempoEspera);
                             } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
                         }
 

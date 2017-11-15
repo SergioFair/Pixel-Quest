@@ -38,19 +38,19 @@ public class TropaDistanciaAliada extends AbstractTropa {
         this.sprites = new HashMap<>();
         Sprite actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_distancia_aliado_mov) , getAncho(), getAlto()
-                , 2, 2, true);
+                , 1, 2, true);
         sprites.put(MOVIENDOSE, actual);
 
         sprite = actual;
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
                 , R.drawable.animacion_distancia_aliado_atq) , getAncho(), getAlto()
-                , 6, 6, true);
+                , 1, 6, true);
         sprites.put(ATACANDO, actual);
 
         actual = new Sprite(CargadorGraficos.cargarDrawable(getContext()
-                , R.drawable.animacion_distancia_aliado_muerte) , getAncho(), getAlto()
-                , 7, 7, false);
+                , R.drawable.animacion_muerte_defecto) , getAncho(), getAlto()
+                , 1, 4, false);
         sprites.put(MURIENDO, actual);
     }
 

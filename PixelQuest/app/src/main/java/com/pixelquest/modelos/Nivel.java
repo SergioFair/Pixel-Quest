@@ -13,6 +13,7 @@ import com.pixelquest.modelos.tropas.Tropa;
 import com.pixelquest.modelos.tropas.enemigas.TropaLigeraEnemigo;
 import com.pixelquest.modelos.visual.Fondo;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,8 +36,8 @@ public class Nivel {
     }
 
     private void inicializar(){
-        this.enemigos = new LinkedList<>();
-        this.aliados = new LinkedList<>();
+        this.enemigos = new ArrayList<>();
+        this.aliados = new ArrayList<>();
         fondo = new Fondo(context, CargadorGraficos.cargarBitmap(context,
                 R.drawable.background_field), 0);
         this.nivelPausado = false;
@@ -61,10 +62,12 @@ public class Nivel {
 
     public void dibujar(Canvas canvas) {
         fondo.dibujar(canvas);
-        for(Tropa t : enemigos)
-            t.dibujar(canvas);
-        for(Tropa t : aliados)
-            t.dibujar(canvas);
+        for(Iterator<Tropa> iterator = enemigos.iterator();
+            iterator.hasNext(); )
+            iterator.next().dibujar(canvas);
+        for(Iterator<Tropa> iterator = aliados.iterator();
+            iterator.hasNext(); )
+            iterator.next().dibujar(canvas);
     }
 
     public boolean isNivelPausado() {
@@ -95,22 +98,28 @@ public class Nivel {
     }
 
     private void aplicarReglasMovimiento() {
-        Tropa t, aux;
-        for (Tropa enemigo : enemigos) {
-            t = enemigo;
-            if (t.estaEnemigoEnPantalla() == -1)
-                t.setEstado(Estados.DESTRUIDO);
-            t.mover();
-            for (Tropa aliado : aliados) {
-                aux = aliado;
-                if (aux.estaAliadoEnPantalla() == -1)
-                    aux.setEstado(Estados.DESTRUIDO);
-                aux.mover();
-                if (t.colisiona(aux)) {
+        Tropa t = null, aux = null;
+        for(Iterator<Tropa> iterator = enemigos.iterator();
+            iterator.hasNext(); ){
+            t = iterator.next();
+            if (t!=null) {
+                if(t.estaEnemigoEnPantalla() == -1)
+                    t.setEstado(Estados.DESTRUIDO);
+                t.mover();
+            }
+            for(Iterator<Tropa> iteratorAliados = aliados.iterator();
+                iteratorAliados.hasNext(); ) {
+                aux = iteratorAliados.next();
+                if (aux!=null) {
+                    if(aux.estaAliadoEnPantalla() == -1)
+                        aux.setEstado(Estados.DESTRUIDO);
+                    aux.mover();
+                }
+                if (aux!=null && t!=null && t.colisiona(aux)) {
                     if (t.isSpriteFinalizado() && aux.getEstado() != Estados.INACTIVO
                             && t.getEstado() != Estados.DESTRUIDO) {
-                        t.setEstado(Estados.ATACANDO);
                         t.setVelocidad(0);
+                        t.setEstado(Estados.ATACANDO);
                         t.atacar(aux);
                     }
                     if (aux.isSpriteFinalizado() && t.getEstado() != Estados.INACTIVO

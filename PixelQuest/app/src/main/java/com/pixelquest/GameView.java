@@ -168,7 +168,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         controlMana = new ControlMana(context);
         controlVida = new ControlVida(context);
         random = new Random();
-        randtime = random.nextInt(5000)+7000;
+        randtime = random.nextInt(10000)+5000;
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -198,7 +198,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         };
         timer.schedule(timerTask,0,randtime);
-        timer.schedule(timerTask2,0,1000);
+        timer.schedule(timerTask2,0,800);
     }
 
     private void inicializarBotonesFlechas() {
@@ -275,6 +275,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 gameLoop.join();
                 intentarDeNuevo = false;
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

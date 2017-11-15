@@ -8,12 +8,12 @@
     <integer name="tropaDistanciaAtaque">1</integer>
     <integer name="tropaLigeraAtaque">2</integer>
     <integer name="tropaPesadaAtaque">1</integer>
-    <integer name="tropaBossAtaque">4</integer>
+    <integer name="tropaBossAtaque">3</integer>
 
-    <integer name="tropaDistanciaVelocidad">10</integer>
-    <integer name="tropaLigeraVelocidad">15</integer>
-    <integer name="tropaPesadaVelocidad">5</integer>
-    <integer name="tropaBossVelocidad">5</integer>
+    <integer name="tropaDistanciaVelocidad">7</integer>
+    <integer name="tropaLigeraVelocidad">10</integer>
+    <integer name="tropaPesadaVelocidad">3</integer>
+    <integer name="tropaBossVelocidad">3</integer>
 
     <integer name="tropaDistanciaCoste">7</integer>
     <integer name="tropaLigeraCoste">5</integer>
