@@ -8,7 +8,9 @@ import com.pixelquest.R;
 import com.pixelquest.configuracion.Estados;
 import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.graficos.Sprite;
+import com.pixelquest.modelos.Modelo;
 import com.pixelquest.modelos.tropas.AbstractTropa;
+import com.pixelquest.modelos.tropas.Tropa;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +59,18 @@ public class TropaDistanciaAliada extends AbstractTropa {
     @Override
     public void dibujar(Canvas canvas) {
         sprite.dibujarSprite(canvas, (int)getX(), (int)getY(), false);
+    }
+
+    @Override
+    public boolean colisiona(Tropa tropa){
+        boolean result = false;
+        Modelo model = (Modelo) tropa;
+        if(model.getY() == getY()){
+            if (model.getX() <= getX() + GameView.pantallaAncho/5) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override

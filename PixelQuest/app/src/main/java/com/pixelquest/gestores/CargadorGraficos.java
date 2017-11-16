@@ -21,7 +21,7 @@ public class CargadorGraficos {
         drawables.put(id, nuevoDrawable);
         return nuevoDrawable;
     }
-	
+
     public static Bitmap cargarBitmap(Context context,int id)
     {
         if (bitmaps.containsKey(id)){

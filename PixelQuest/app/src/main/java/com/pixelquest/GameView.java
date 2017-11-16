@@ -188,7 +188,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         break;
                 }
                 if(nivel.getEnemigos().size()<5)
-                    nivel.crearTropaEnemiga(row, randEnemy);
+                    synchronized (nivel.getEnemigos()) {
+                        nivel.crearTropaEnemiga(row, randEnemy);
+                    }
             }
         };
         TimerTask timerTask2 = new TimerTask() {

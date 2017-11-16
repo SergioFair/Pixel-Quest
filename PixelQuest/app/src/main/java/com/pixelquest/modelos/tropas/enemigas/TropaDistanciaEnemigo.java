@@ -8,7 +8,9 @@ import com.pixelquest.R;
 import com.pixelquest.configuracion.Estados;
 import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.graficos.Sprite;
+import com.pixelquest.modelos.Modelo;
 import com.pixelquest.modelos.tropas.AbstractTropa;
+import com.pixelquest.modelos.tropas.Tropa;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +78,18 @@ public class TropaDistanciaEnemigo extends AbstractTropa {
         } else{
             sprite = sprites.get(MOVIENDOSE);
         }
+    }
+
+    @Override
+    public boolean colisiona(Tropa tropa){
+        boolean result = false;
+        Modelo model = (Modelo) tropa;
+        if(model.getY() == getY()){
+            if (model.getX() + GameView.pantallaAncho/5 >= getX()) {
+                result = true;
+            }
+        }
+        return result;
     }
 
 }

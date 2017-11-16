@@ -9,7 +9,10 @@ import com.pixelquest.R;
 import com.pixelquest.configuracion.Estados;
 import com.pixelquest.configuracion.GestorTropas;
 import com.pixelquest.gestores.CargadorGraficos;
+import com.pixelquest.modelos.tropas.Flecha;
 import com.pixelquest.modelos.tropas.Tropa;
+import com.pixelquest.modelos.tropas.aliadas.TropaDistanciaAliada;
+import com.pixelquest.modelos.tropas.enemigas.TropaDistanciaEnemigo;
 import com.pixelquest.modelos.tropas.enemigas.TropaLigeraEnemigo;
 import com.pixelquest.modelos.visual.Fondo;
 
@@ -29,6 +32,7 @@ public class Nivel {
     private GameView gameView;
     private boolean nivelPausado;
     private Fondo fondo;
+    private List<Flecha> proyectiles;
 
     public Nivel(Context context){
         this.context = context;
@@ -38,6 +42,7 @@ public class Nivel {
     private void inicializar(){
         this.enemigos = new ArrayList<>();
         this.aliados = new ArrayList<>();
+        this.proyectiles = new ArrayList<>();
         fondo = new Fondo(context, CargadorGraficos.cargarBitmap(context,
                 R.drawable.background_field), 0);
         this.nivelPausado = false;
@@ -61,13 +66,23 @@ public class Nivel {
     }
 
     public void dibujar(Canvas canvas) {
+        Tropa t;
         fondo.dibujar(canvas);
-        for(Iterator<Tropa> iterator = enemigos.iterator();
-            iterator.hasNext(); )
-            iterator.next().dibujar(canvas);
-        for(Iterator<Tropa> iterator = aliados.iterator();
-            iterator.hasNext(); )
-            iterator.next().dibujar(canvas);
+        Iterator<Tropa> iterator = enemigos.iterator();
+        while(iterator.hasNext()) {
+            synchronized (iterator) {
+                t = iterator.next();
+                t.dibujar(canvas);
+            }
+        }
+        iterator = aliados.iterator();
+        while(iterator.hasNext())
+            synchronized (iterator) {
+                t = iterator.next();
+                t.dibujar(canvas);
+            }
+        for(Flecha f : proyectiles)
+            f.dibujar(canvas);
     }
 
     public boolean isNivelPausado() {
@@ -80,64 +95,80 @@ public class Nivel {
 
     public void actualizar(long tiempo) {
         Tropa tropa;
-        for(Iterator<Tropa> iterator = enemigos.iterator();
-            iterator.hasNext(); ) {
+        Iterator<Tropa> iterator = enemigos.iterator();
+        while(iterator.hasNext()) {
             tropa = iterator.next();
             tropa.actualizar(tiempo);
             if(tropa.getEstado() == Estados.DESTRUIDO)
-                iterator.remove();
+                synchronized (iterator) {
+                    iterator.remove();
+                }
         }
-        for(Iterator<Tropa> iterator = aliados.iterator();
-            iterator.hasNext(); ) {
+        iterator = aliados.iterator();
+        while(iterator.hasNext()) {
             tropa = iterator.next();
             tropa.actualizar(tiempo);
             if (tropa.getEstado() == Estados.DESTRUIDO)
-                iterator.remove();
+                synchronized (iterator) {
+                    iterator.remove();
+                }
         }
         aplicarReglasMovimiento();
     }
 
     private void aplicarReglasMovimiento() {
         Tropa t = null, aux = null;
-        for(Iterator<Tropa> iterator = enemigos.iterator();
-            iterator.hasNext(); ){
+        for(Flecha f : proyectiles)
+            f.acelerar(f.getVelocidad());
+        Iterator<Tropa> iterator = enemigos.iterator();
+        while(iterator.hasNext()){
             t = iterator.next();
             if (t!=null) {
                 if(t.estaEnemigoEnPantalla() == -1)
                     t.setEstado(Estados.DESTRUIDO);
-                t.mover();
+                else
+                    t.mover();
             }
-            for(Iterator<Tropa> iteratorAliados = aliados.iterator();
-                iteratorAliados.hasNext(); ) {
+            Iterator<Tropa> iteratorAliados = aliados.iterator();
+            while(iteratorAliados.hasNext()) {
                 aux = iteratorAliados.next();
                 if (aux!=null) {
-                    if(aux.estaAliadoEnPantalla() == -1)
+                    if (aux.estaAliadoEnPantalla() == -1)
                         aux.setEstado(Estados.DESTRUIDO);
-                    aux.mover();
-                }
-                if (aux!=null && t!=null && t.colisiona(aux)) {
-                    if (t.isSpriteFinalizado() && aux.getEstado() != Estados.INACTIVO
-                            && t.getEstado() != Estados.DESTRUIDO) {
-                        t.setVelocidad(0);
-                        t.setEstado(Estados.ATACANDO);
-                        t.atacar(aux);
-                    }
+                    else
+                        aux.mover();
+                } if(aux != null && aux.colisiona(t)){
                     if (aux.isSpriteFinalizado() && t.getEstado() != Estados.INACTIVO
                             && t.getEstado() != Estados.DESTRUIDO) {
                         aux.setVelocidad(0);
                         aux.setEstado(Estados.ATACANDO);
+                        if(aux instanceof TropaDistanciaAliada)
+                            proyectiles.add(new Flecha(context
+                                    , ((TropaDistanciaAliada) aux).getX()
+                                    , ((TropaDistanciaAliada) aux).getY()
+                                    , 1));
                         aux.atacar(t);
                     }
-                    if(aux.getVida() <= 0) {
-                        aux.setEstado(Estados.INACTIVO);
-                        t.setEstado(Estados.ACTIVO);
-                        t.setVelocidad(t.getVelocidadInicial());
+                } if (t!=null && t.colisiona(aux)) {
+                    if (t.isSpriteFinalizado() && aux.getEstado() != Estados.INACTIVO
+                            && t.getEstado() != Estados.DESTRUIDO) {
+                        t.setVelocidad(0);
+                        t.setEstado(Estados.ATACANDO);
+                        if(t instanceof TropaDistanciaEnemigo)
+                            proyectiles.add(new Flecha(context
+                                    , ((TropaDistanciaEnemigo) t).getX()
+                                    , ((TropaDistanciaEnemigo) t).getY()
+                                    , -1));
+                        t.atacar(aux);
                     }
-                    if(t.getVida() <= 0) {
-                        t.setEstado(Estados.INACTIVO);
-                        aux.setEstado(Estados.ACTIVO);
-                        aux.setVelocidad(aux.getVelocidadInicial());
-                    }
+                } if(aux.getVida() <= 0) {
+                    aux.setEstado(Estados.INACTIVO);
+                    t.setEstado(Estados.ACTIVO);
+                    t.setVelocidad(t.getVelocidadInicial());
+                } if(t.getVida() <= 0) {
+                    t.setEstado(Estados.INACTIVO);
+                    aux.setEstado(Estados.ACTIVO);
+                    aux.setVelocidad(aux.getVelocidadInicial());
                 }
             }
         }

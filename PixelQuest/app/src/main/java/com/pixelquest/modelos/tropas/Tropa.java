@@ -18,11 +18,7 @@ public interface Tropa{
 
     int getEstado();
 
-    int getAtaque();
-
     int getVida();
-
-    double getVelocidad();
 
     void setVelocidad(int i);
 
