@@ -11,8 +11,8 @@ import com.pixelquest.modelos.Nivel;
 import com.pixelquest.modelos.powerups.controles.ControlMana;
 import com.pixelquest.modelos.powerups.controles.ControlVida;
 import com.pixelquest.modelos.visual.botones.BotonFlecha;
+import com.pixelquest.modelos.visual.botones.BotonPausa;
 import com.pixelquest.modelos.visual.botones.BotonTropa;
-import com.pixelquest.modelos.visual.botones.BotonTropaBoss;
 import com.pixelquest.modelos.visual.botones.BotonTropaDistancia;
 import com.pixelquest.modelos.visual.botones.BotonTropaLigera;
 import com.pixelquest.modelos.visual.botones.BotonTropaPesada;
@@ -38,6 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Nivel nivel;
     private ControlMana controlMana;
     private ControlVida controlVida;
+    private BotonPausa pausa;
     private boolean arrowsEnabled;
     private Random random;
     private int randtime;
@@ -164,6 +165,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.botonesFlechas = new LinkedList<>();
         inicializarBotonesTropas();
         inicializarBotonesFlechas();
+        pausa = new BotonPausa(context);
         nivel.setGameView(this);
         controlMana = new ControlMana(context);
         controlVida = new ControlVida(context);
@@ -173,7 +175,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                int randEnemy = random.nextInt(4)
+                int randEnemy = random.nextInt(3)
                         , randRow = random.nextInt(3);
                 int row = FIRST_ROW;
                 switch(randRow){
@@ -199,8 +201,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 controlMana.aumentarMana(1);
             }
         };
+        TimerTask timerTask3 = new TimerTask() {
+            @Override
+            public void run() {
+                nivel.inicializarPowerUps();
+            }
+        };
         timer.schedule(timerTask,0,randtime);
         timer.schedule(timerTask2,0,800);
+        timer.schedule(timerTask3, 0, 30000);
     }
 
     private void inicializarBotonesFlechas() {
@@ -213,7 +222,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.botonesTropas.add(new BotonTropaLigera(context));
         this.botonesTropas.add(new BotonTropaDistancia(context));
         this.botonesTropas.add(new BotonTropaPesada(context));
-        this.botonesTropas.add(new BotonTropaBoss(context));
     }
 
     public void actualizar(long tiempo) throws Exception {
@@ -231,13 +239,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     protected void dibujar(Canvas canvas) {
         if (!nivel.isNivelPausado()) {
             nivel.dibujar(canvas);
+            pausa.dibujar(canvas);
             controlMana.dibujar(canvas);
+            controlVida.dibujar(canvas);
             for(BotonTropa boton : botonesTropas)
                 boton.dibujar(canvas);
-            if(arrowsEnabled)
+            if(arrowsEnabled) {
                 for(BotonFlecha bt : botonesFlechas)
                     bt.dibujar(canvas);
-            controlVida.dibujar(canvas);
+            }
         }
     }
 
@@ -288,6 +298,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public ControlVida getControlVida() {
+        return controlVida;
     }
 
     public ControlMana getControlMana() {

@@ -10,7 +10,7 @@ import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.modelos.Modelo;
 
 /**
- * Created by Sergio on 08/11/2017.
+ * Created by Sergio.
  */
 
 public class BotonTropaLigera extends Modelo implements BotonTropa{
@@ -20,7 +20,7 @@ public class BotonTropaLigera extends Modelo implements BotonTropa{
     private boolean selected;
 
     public BotonTropaLigera(Context context) {
-        super(context, GameView.pantallaAncho*0.3,GameView.pantallaAlto*0.9
+        super(context, GameView.pantallaAncho*0.4,GameView.pantallaAlto*0.9
                 , (int) (GameView.pantallaAncho*0.2), (int) (GameView.pantallaAlto*0.2));
         imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_ligero);
         this.coste = getContext().getResources().getInteger(R.integer.tropaLigeraCoste);

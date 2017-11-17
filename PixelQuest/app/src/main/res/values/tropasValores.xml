@@ -3,21 +3,17 @@
     <integer name="tropaDistanciaVida">3</integer>
     <integer name="tropaLigeraVida">7</integer>
     <integer name="tropaPesadaVida">10</integer>
-    <integer name="tropaBossVida">12</integer>
 
     <integer name="tropaDistanciaAtaque">1</integer>
     <integer name="tropaLigeraAtaque">2</integer>
     <integer name="tropaPesadaAtaque">1</integer>
-    <integer name="tropaBossAtaque">3</integer>
 
     <integer name="tropaDistanciaVelocidad">5</integer>
     <integer name="tropaLigeraVelocidad">7</integer>
     <integer name="tropaPesadaVelocidad">3</integer>
-    <integer name="tropaBossVelocidad">3</integer>
 
     <integer name="tropaDistanciaCoste">7</integer>
     <integer name="tropaLigeraCoste">5</integer>
     <integer name="tropaPesadaCoste">10</integer>
-    <integer name="tropaBossCoste">20</integer>
 
 </resources>

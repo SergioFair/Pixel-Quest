@@ -32,8 +32,6 @@ public class Sprite {
     private int modeloAncho;
     private int modeloAltura;
 
-
-
     private boolean bucle;
 
     public Sprite(Drawable drawable, int modeloAncho, int modeloAltura, int fps, int framesTotales
@@ -86,7 +84,6 @@ public class Sprite {
                 + modeloAncho/2, y + modeloAltura/2);
         canvas.drawBitmap(bitmap, rectanguloDibujo, destRect, efectoTransparente);
     }
-
 
     public void setFrameActual(int frameActual) {
         this.frameActual = frameActual;

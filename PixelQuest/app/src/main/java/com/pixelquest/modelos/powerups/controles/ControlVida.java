@@ -2,7 +2,10 @@ package com.pixelquest.modelos.powerups.controles;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
+import com.pixelquest.GameView;
 import com.pixelquest.modelos.Modelo;
 
 /**
@@ -14,17 +17,10 @@ public class ControlVida extends Modelo {
     private int vidaJugador, vidaEnemigo;
 
     public ControlVida(Context context){
-        super(context, 0,0, 40, 40);
+        super(context, GameView.pantallaAlto*0.1,GameView.pantallaAncho*0.1
+                , 40, 40);
         this.vidaJugador = 10;
-        this.vidaEnemigo = 100;
-    }
-
-    public int getVidaJugador(){
-        return this.vidaJugador;
-    }
-
-    public int getVidaEnemigo(){
-        return this.vidaEnemigo;
+        this.vidaEnemigo = 10;
     }
 
     public void aumentarVidaJugador(int vida){
@@ -36,10 +32,23 @@ public class ControlVida extends Modelo {
     }
 
     public void reducirVidaEnemigo(){
-        this.vidaEnemigo -= 10;
+        this.vidaEnemigo--;
     }
 
     public void dibujar(Canvas canvas) {
+        //Vida jugador
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setAntiAlias(true);
+        paint.setTextSize(GameView.pantallaAlto/10);
+        canvas.drawText(String.valueOf(this.vidaJugador), (int) getX(), (int) getY(), paint);
 
+        //Vida enemigo
+        paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setAntiAlias(true);
+        paint.setTextSize(GameView.pantallaAlto/10);
+        canvas.drawText(String.valueOf(this.vidaEnemigo), (int) (GameView.pantallaAncho*0.9)
+                , (int) getY(), paint);
     }
 }

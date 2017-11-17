@@ -9,6 +9,8 @@ import com.pixelquest.R;
 import com.pixelquest.configuracion.Estados;
 import com.pixelquest.configuracion.GestorTropas;
 import com.pixelquest.gestores.CargadorGraficos;
+import com.pixelquest.modelos.powerups.PowerUpMana;
+import com.pixelquest.modelos.powerups.PowerUpVida;
 import com.pixelquest.modelos.tropas.Flecha;
 import com.pixelquest.modelos.tropas.Tropa;
 import com.pixelquest.modelos.tropas.aliadas.TropaDistanciaAliada;
@@ -33,6 +35,8 @@ public class Nivel {
     private boolean nivelPausado;
     private Fondo fondo;
     private List<Flecha> proyectiles;
+    private PowerUpMana pUpMana;
+    private PowerUpVida pUpVida;
 
     public Nivel(Context context){
         this.context = context;
@@ -47,6 +51,13 @@ public class Nivel {
                 R.drawable.background_field), 0);
         this.nivelPausado = false;
         this.nivelActual = 1;
+    }
+
+    public void inicializarPowerUps() {
+        this.pUpMana = new PowerUpMana(context, gameView.getControlMana()
+                ,(int) (GameView.pantallaAncho/1.5),GameView.FIRST_ROW);
+        this.pUpVida = new PowerUpVida(context, gameView.getControlVida()
+                ,GameView.pantallaAncho/3, GameView.THIRD_ROW);
     }
 
     public int getNivelActual() {
@@ -68,6 +79,10 @@ public class Nivel {
     public void dibujar(Canvas canvas) {
         Tropa t;
         fondo.dibujar(canvas);
+        if(pUpMana!=null)
+            pUpMana.dibujar(canvas);
+        if(pUpVida!=null)
+            pUpVida.dibujar(canvas);
         Iterator<Tropa> iterator = enemigos.iterator();
         while(iterator.hasNext()) {
             synchronized (iterator) {
@@ -95,25 +110,31 @@ public class Nivel {
 
     public void actualizar(long tiempo) {
         Tropa tropa;
-        Iterator<Tropa> iterator = enemigos.iterator();
-        while(iterator.hasNext()) {
-            tropa = iterator.next();
-            tropa.actualizar(tiempo);
-            if(tropa.getEstado() == Estados.DESTRUIDO)
-                synchronized (iterator) {
-                    iterator.remove();
-                }
+        if(!isNivelPausado()) {
+            if (pUpMana != null)
+                pUpMana.actualizar(tiempo);
+            if (pUpVida != null)
+                pUpVida.actualizar(tiempo);
+            Iterator<Tropa> iterator = enemigos.iterator();
+            while (iterator.hasNext()) {
+                tropa = iterator.next();
+                tropa.actualizar(tiempo);
+                if (tropa.getEstado() == Estados.DESTRUIDO)
+                    synchronized (iterator) {
+                        iterator.remove();
+                    }
+            }
+            iterator = aliados.iterator();
+            while (iterator.hasNext()) {
+                tropa = iterator.next();
+                tropa.actualizar(tiempo);
+                if (tropa.getEstado() == Estados.DESTRUIDO)
+                    synchronized (iterator) {
+                        iterator.remove();
+                    }
+            }
+            aplicarReglasMovimiento();
         }
-        iterator = aliados.iterator();
-        while(iterator.hasNext()) {
-            tropa = iterator.next();
-            tropa.actualizar(tiempo);
-            if (tropa.getEstado() == Estados.DESTRUIDO)
-                synchronized (iterator) {
-                    iterator.remove();
-                }
-        }
-        aplicarReglasMovimiento();
     }
 
     private void aplicarReglasMovimiento() {
@@ -124,8 +145,10 @@ public class Nivel {
         while(iterator.hasNext()){
             t = iterator.next();
             if (t!=null) {
-                if(t.estaEnemigoEnPantalla() == -1)
+                if(t.estaEnemigoEnPantalla() == -1) {
                     t.setEstado(Estados.DESTRUIDO);
+                    gameView.getControlVida().reducirVidaJugador();
+                }
                 else
                     t.mover();
             }
@@ -133,8 +156,10 @@ public class Nivel {
             while(iteratorAliados.hasNext()) {
                 aux = iteratorAliados.next();
                 if (aux!=null) {
-                    if (aux.estaAliadoEnPantalla() == -1)
+                    if (aux.estaAliadoEnPantalla() == -1) {
                         aux.setEstado(Estados.DESTRUIDO);
+                        gameView.getControlVida().reducirVidaEnemigo();
+                    }
                     else
                         aux.mover();
                 } if(aux != null && aux.colisiona(t)){
@@ -169,6 +194,12 @@ public class Nivel {
                     t.setEstado(Estados.INACTIVO);
                     aux.setEstado(Estados.ACTIVO);
                     aux.setVelocidad(aux.getVelocidadInicial());
+                } if(pUpMana != null && pUpMana.colisiona(aux)){
+                    pUpMana.execute();
+                    pUpMana = null;
+                } if(pUpVida != null && pUpVida.colisiona(aux)){
+                    pUpVida.execute();
+                    pUpVida = null;
                 }
             }
         }
