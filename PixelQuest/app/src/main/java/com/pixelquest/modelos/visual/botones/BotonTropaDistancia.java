@@ -20,7 +20,7 @@ public class BotonTropaDistancia extends Modelo implements BotonTropa {
     private boolean selected;
 
     public BotonTropaDistancia(Context context) {
-        super(context, GameView.pantallaAncho*0.6,GameView.pantallaAlto*0.9
+        super(context, GameView.pantallaAncho*0.5,GameView.pantallaAlto*0.9
                 ,(int) (GameView.pantallaAncho*0.2), (int) (GameView.pantallaAlto*0.2));
         imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_distancia);
         this.coste = getContext().getResources().getInteger(R.integer.tropaDistanciaCoste);

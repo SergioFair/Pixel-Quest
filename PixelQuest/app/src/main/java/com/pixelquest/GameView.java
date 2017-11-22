@@ -10,9 +10,11 @@ import com.pixelquest.configuracion.GestorTropas;
 import com.pixelquest.modelos.Nivel;
 import com.pixelquest.modelos.powerups.controles.ControlMana;
 import com.pixelquest.modelos.powerups.controles.ControlVida;
+import com.pixelquest.modelos.visual.MensajePausa;
 import com.pixelquest.modelos.visual.botones.BotonFlecha;
 import com.pixelquest.modelos.visual.botones.BotonPausa;
 import com.pixelquest.modelos.visual.botones.BotonTropa;
+import com.pixelquest.modelos.visual.botones.BotonTropaBoss;
 import com.pixelquest.modelos.visual.botones.BotonTropaDistancia;
 import com.pixelquest.modelos.visual.botones.BotonTropaLigera;
 import com.pixelquest.modelos.visual.botones.BotonTropaPesada;
@@ -42,6 +44,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private boolean arrowsEnabled;
     private Random random;
     private int randtime;
+    private MensajePausa mensajePausa;
+    private Timer timer;
 
     public GameView(Context context) {
         super(context);
@@ -116,9 +120,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < 6; i++) {
             if (accion[i] != NO_ACTION) {
                 if (accion[i] == ACTION_DOWN) {
-                    if (nivel.isNivelPausado())
+                    if (nivel.isNivelPausado()) {
                         nivel.setNivelPausado(false);
-                    else {
+                        inicializarTareas();
+                    } else {
                         for (BotonTropa bt : botonesTropas)
                             if (bt.estaPulsado(x[i], y[i])) {
                                 if (!bt.isSelected()
@@ -144,6 +149,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                 deseleccionarBotones();
                             }
                         }
+                        if(pausa.estaPulsado(x[i],y[i])){
+                            nivel.setNivelPausado(true);
+                            cancelarTareas();
+                        }
                     }
                 }
             }
@@ -165,17 +174,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.botonesFlechas = new LinkedList<>();
         inicializarBotonesTropas();
         inicializarBotonesFlechas();
+        mensajePausa = new MensajePausa(context);
         pausa = new BotonPausa(context);
         nivel.setGameView(this);
         controlMana = new ControlMana(context);
         controlVida = new ControlVida(context);
         random = new Random();
         randtime = random.nextInt(10000)+5000;
-        Timer timer = new Timer();
+        inicializarTareas();
+        nivel.inicializarPowerUps();
+    }
+
+    private void inicializarTareas() {
+        timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                int randEnemy = random.nextInt(3)
+                int randEnemy = random.nextInt(4)
                         , randRow = random.nextInt(3);
                 int row = FIRST_ROW;
                 switch(randRow){
@@ -201,15 +216,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 controlMana.aumentarMana(1);
             }
         };
-        TimerTask timerTask3 = new TimerTask() {
-            @Override
-            public void run() {
-                nivel.inicializarPowerUps();
-            }
-        };
-        timer.schedule(timerTask,0,randtime);
-        timer.schedule(timerTask2,0,800);
-        timer.schedule(timerTask3, 0, 30000);
+        timer.schedule(timerTask,2000,randtime);
+        timer.schedule(timerTask2,1000,1000);
+    }
+
+    private void cancelarTareas(){
+        timer.cancel();
+        timer.purge();
     }
 
     private void inicializarBotonesFlechas() {
@@ -222,6 +235,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.botonesTropas.add(new BotonTropaLigera(context));
         this.botonesTropas.add(new BotonTropaDistancia(context));
         this.botonesTropas.add(new BotonTropaPesada(context));
+        this.botonesTropas.add(new BotonTropaBoss(context));
     }
 
     public void actualizar(long tiempo) throws Exception {
@@ -241,14 +255,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             nivel.dibujar(canvas);
             pausa.dibujar(canvas);
             controlMana.dibujar(canvas);
-            controlVida.dibujar(canvas);
             for(BotonTropa boton : botonesTropas)
                 boton.dibujar(canvas);
             if(arrowsEnabled) {
                 for(BotonFlecha bt : botonesFlechas)
                     bt.dibujar(canvas);
             }
+        } else{
+            mensajePausa.dibujar(canvas);
         }
+        controlVida.dibujar(canvas);
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format

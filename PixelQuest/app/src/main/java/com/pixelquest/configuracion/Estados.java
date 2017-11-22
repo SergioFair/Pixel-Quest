@@ -9,5 +9,6 @@ public class Estados {
     public final static int ACTIVO = 0;
     public final static int DESTRUIDO = 1;
     public final static int ATACANDO = 2;
+    public final static int CRUZANDO = 3;
     public final static int INACTIVO = -1;
 }

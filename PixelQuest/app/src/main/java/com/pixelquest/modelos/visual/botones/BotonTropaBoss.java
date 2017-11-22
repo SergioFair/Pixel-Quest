@@ -10,20 +10,20 @@ import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.modelos.Modelo;
 
 /**
- * Created by Sergio.
+ * Created by Sergio on 08/11/2017.
  */
 
-public class BotonTropaLigera extends Modelo implements BotonTropa{
+public class BotonTropaBoss extends Modelo implements BotonTropa {
 
+    private boolean selected;
     private Drawable imagen;
     private int coste;
-    private boolean selected;
 
-    public BotonTropaLigera(Context context) {
-        super(context, GameView.pantallaAncho*0.3,GameView.pantallaAlto*0.9
-                , (int) (GameView.pantallaAncho*0.2), (int) (GameView.pantallaAlto*0.2));
-        imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_ligero);
-        this.coste = getContext().getResources().getInteger(R.integer.tropaLigeraCoste);
+    public BotonTropaBoss(Context context) {
+        super(context, GameView.pantallaAncho*0.9,GameView.pantallaAlto*0.9
+                ,(int) (GameView.pantallaAncho*0.2), (int) (GameView.pantallaAlto*0.2));
+        imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_boss);
+        this.coste = getContext().getResources().getInteger(R.integer.tropaBossCoste);
         this.selected = false;
         desactivar();
     }
@@ -70,13 +70,13 @@ public class BotonTropaLigera extends Modelo implements BotonTropa{
 
     @Override
     public void deseleccionar() {
-        this.imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_ligero);
+        this.imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_boss);
         this.selected = false;
     }
 
     @Override
     public void seleccionar() {
-        this.imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_ligero_activo);
+        this.imagen = CargadorGraficos.cargarDrawable(getContext(), R.drawable.boton_boss_activo);
         this.selected = true;
     }
 

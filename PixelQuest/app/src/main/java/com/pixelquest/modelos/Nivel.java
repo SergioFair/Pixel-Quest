@@ -78,24 +78,26 @@ public class Nivel {
 
     public void dibujar(Canvas canvas) {
         Tropa t;
+        Iterator<Tropa> iterator;
         fondo.dibujar(canvas);
         if(pUpMana!=null)
             pUpMana.dibujar(canvas);
         if(pUpVida!=null)
             pUpVida.dibujar(canvas);
-        Iterator<Tropa> iterator = enemigos.iterator();
-        while(iterator.hasNext()) {
-            synchronized (iterator) {
+        synchronized (this.enemigos){
+            iterator = enemigos.iterator();
+            while(iterator.hasNext()) {
                 t = iterator.next();
                 t.dibujar(canvas);
             }
         }
-        iterator = aliados.iterator();
-        while(iterator.hasNext())
-            synchronized (iterator) {
+        synchronized (this.aliados){
+            iterator = aliados.iterator();
+            while(iterator.hasNext()) {
                 t = iterator.next();
                 t.dibujar(canvas);
             }
+        }
         for(Flecha f : proyectiles)
             f.dibujar(canvas);
     }
@@ -110,28 +112,37 @@ public class Nivel {
 
     public void actualizar(long tiempo) {
         Tropa tropa;
+        Iterator<Tropa> iterator;
         if(!isNivelPausado()) {
             if (pUpMana != null)
                 pUpMana.actualizar(tiempo);
             if (pUpVida != null)
                 pUpVida.actualizar(tiempo);
-            Iterator<Tropa> iterator = enemigos.iterator();
-            while (iterator.hasNext()) {
-                tropa = iterator.next();
-                tropa.actualizar(tiempo);
-                if (tropa.getEstado() == Estados.DESTRUIDO)
-                    synchronized (iterator) {
+            synchronized (this.enemigos) {
+                iterator = enemigos.iterator();
+                while (iterator.hasNext()) {
+                    tropa = iterator.next();
+                    tropa.actualizar(tiempo);
+                    if (tropa.getEstado() == Estados.DESTRUIDO
+                            || tropa.getEstado() == Estados.CRUZANDO) {
                         iterator.remove();
+                        if(tropa.getEstado() == Estados.CRUZANDO)
+                            gameView.getControlVida().reducirVidaJugador();
                     }
+                }
             }
-            iterator = aliados.iterator();
-            while (iterator.hasNext()) {
-                tropa = iterator.next();
-                tropa.actualizar(tiempo);
-                if (tropa.getEstado() == Estados.DESTRUIDO)
-                    synchronized (iterator) {
+            synchronized (aliados) {
+                iterator = aliados.iterator();
+                while (iterator.hasNext()) {
+                    tropa = iterator.next();
+                    tropa.actualizar(tiempo);
+                    if (tropa.getEstado() == Estados.DESTRUIDO
+                            || tropa.getEstado() == Estados.CRUZANDO) {
                         iterator.remove();
+                        if(tropa.getEstado() == Estados.CRUZANDO)
+                            gameView.getControlVida().reducirVidaEnemigo();
                     }
+                }
             }
             aplicarReglasMovimiento();
         }
@@ -139,67 +150,74 @@ public class Nivel {
 
     private void aplicarReglasMovimiento() {
         Tropa t = null, aux = null;
+        Iterator<Tropa> iterator, iteratorAliados;
         for(Flecha f : proyectiles)
             f.acelerar(f.getVelocidad());
-        Iterator<Tropa> iterator = enemigos.iterator();
-        while(iterator.hasNext()){
-            t = iterator.next();
-            if (t!=null) {
-                if(t.estaEnemigoEnPantalla() == -1) {
-                    t.setEstado(Estados.DESTRUIDO);
-                    gameView.getControlVida().reducirVidaJugador();
+        synchronized (enemigos) {
+            iterator = enemigos.iterator();
+            while (iterator.hasNext()) {
+                t = iterator.next();
+                if (t != null) {
+                    if (t.estaEnemigoEnPantalla() == -1) {
+                        t.setEstado(Estados.CRUZANDO);
+                    } else
+                        t.mover();
                 }
-                else
-                    t.mover();
-            }
-            Iterator<Tropa> iteratorAliados = aliados.iterator();
-            while(iteratorAliados.hasNext()) {
-                aux = iteratorAliados.next();
-                if (aux!=null) {
-                    if (aux.estaAliadoEnPantalla() == -1) {
-                        aux.setEstado(Estados.DESTRUIDO);
-                        gameView.getControlVida().reducirVidaEnemigo();
+                synchronized (aliados) {
+                    iteratorAliados = aliados.iterator();
+                    while (iteratorAliados.hasNext()) {
+                        aux = iteratorAliados.next();
+                        if (aux != null) {
+                            if (aux.estaAliadoEnPantalla() == -1) {
+                                aux.setEstado(Estados.CRUZANDO);
+                            } else
+                                aux.mover();
+                        }
+                        if (aux != null && aux.colisiona(t)) {
+                            if (aux.isSpriteFinalizado() && t.getEstado() != Estados.INACTIVO
+                                    && t.getEstado() != Estados.DESTRUIDO) {
+                                aux.setVelocidad(0);
+                                aux.setEstado(Estados.ATACANDO);
+                                if (aux instanceof TropaDistanciaAliada)
+                                    proyectiles.add(new Flecha(context
+                                            , ((TropaDistanciaAliada) aux).getX()
+                                            , ((TropaDistanciaAliada) aux).getY()
+                                            , 1));
+                                aux.atacar(t);
+                            }
+                        }
+                        if (t != null && t.colisiona(aux)) {
+                            if (t.isSpriteFinalizado() && aux.getEstado() != Estados.INACTIVO
+                                    && t.getEstado() != Estados.DESTRUIDO) {
+                                t.setVelocidad(0);
+                                t.setEstado(Estados.ATACANDO);
+                                if (t instanceof TropaDistanciaEnemigo)
+                                    proyectiles.add(new Flecha(context
+                                            , ((TropaDistanciaEnemigo) t).getX()
+                                            , ((TropaDistanciaEnemigo) t).getY()
+                                            , -1));
+                                t.atacar(aux);
+                            }
+                        }
+                        if (aux.getVida() <= 0) {
+                            aux.setEstado(Estados.INACTIVO);
+                            t.setEstado(Estados.ACTIVO);
+                            t.setVelocidad(t.getVelocidadInicial());
+                        }
+                        if (t.getVida() <= 0) {
+                            t.setEstado(Estados.INACTIVO);
+                            aux.setEstado(Estados.ACTIVO);
+                            aux.setVelocidad(aux.getVelocidadInicial());
+                        }
+                        if (pUpMana != null && pUpMana.colisiona(aux)) {
+                            pUpMana.execute();
+                            pUpMana = null;
+                        }
+                        if (pUpVida != null && pUpVida.colisiona(aux)) {
+                            pUpVida.execute();
+                            pUpVida = null;
+                        }
                     }
-                    else
-                        aux.mover();
-                } if(aux != null && aux.colisiona(t)){
-                    if (aux.isSpriteFinalizado() && t.getEstado() != Estados.INACTIVO
-                            && t.getEstado() != Estados.DESTRUIDO) {
-                        aux.setVelocidad(0);
-                        aux.setEstado(Estados.ATACANDO);
-                        if(aux instanceof TropaDistanciaAliada)
-                            proyectiles.add(new Flecha(context
-                                    , ((TropaDistanciaAliada) aux).getX()
-                                    , ((TropaDistanciaAliada) aux).getY()
-                                    , 1));
-                        aux.atacar(t);
-                    }
-                } if (t!=null && t.colisiona(aux)) {
-                    if (t.isSpriteFinalizado() && aux.getEstado() != Estados.INACTIVO
-                            && t.getEstado() != Estados.DESTRUIDO) {
-                        t.setVelocidad(0);
-                        t.setEstado(Estados.ATACANDO);
-                        if(t instanceof TropaDistanciaEnemigo)
-                            proyectiles.add(new Flecha(context
-                                    , ((TropaDistanciaEnemigo) t).getX()
-                                    , ((TropaDistanciaEnemigo) t).getY()
-                                    , -1));
-                        t.atacar(aux);
-                    }
-                } if(aux.getVida() <= 0) {
-                    aux.setEstado(Estados.INACTIVO);
-                    t.setEstado(Estados.ACTIVO);
-                    t.setVelocidad(t.getVelocidadInicial());
-                } if(t.getVida() <= 0) {
-                    t.setEstado(Estados.INACTIVO);
-                    aux.setEstado(Estados.ACTIVO);
-                    aux.setVelocidad(aux.getVelocidadInicial());
-                } if(pUpMana != null && pUpMana.colisiona(aux)){
-                    pUpMana.execute();
-                    pUpMana = null;
-                } if(pUpVida != null && pUpVida.colisiona(aux)){
-                    pUpVida.execute();
-                    pUpVida = null;
                 }
             }
         }
@@ -207,11 +225,15 @@ public class Nivel {
 
     public void crearTropaAliada(double y) {
         if(GestorTropas.getInstance().isTropaElegida())
-            aliados.add(GestorTropas.getInstance().createAliado(this.context, y));
+            synchronized (aliados) {
+                aliados.add(GestorTropas.getInstance().createAliado(this.context, y));
+            }
     }
 
     public void crearTropaEnemiga(double y, int tipoEnemigo) {
-        enemigos.add(GestorTropas.getInstance().createEnemigo(this.context, y, tipoEnemigo));
+        synchronized (enemigos) {
+            enemigos.add(GestorTropas.getInstance().createEnemigo(this.context, y, tipoEnemigo));
+        }
     }
 
     public List<Tropa> getEnemigos() {

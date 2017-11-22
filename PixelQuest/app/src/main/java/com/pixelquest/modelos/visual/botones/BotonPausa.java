@@ -19,7 +19,7 @@ public class BotonPausa extends Modelo {
 
     public BotonPausa(Context context) {
         super(context, GameView.pantallaAncho/2, GameView.pantallaAlto*0.1
-                , (int) (GameView.pantallaAncho*0.05), (int) (GameView.pantallaAlto*0.05));
+                , (int) (GameView.pantallaAncho*0.07), (int) (GameView.pantallaAlto*0.07));
         imagen = CargadorGraficos.cargarDrawable(context, R.drawable.pause);
     }
 
@@ -30,5 +30,15 @@ public class BotonPausa extends Modelo {
         imagen.setBounds(xIzquierda, yArriva, xIzquierda
                 + getAncho(), yArriva + getAlto());
         imagen.draw(canvas);
+    }
+
+    public boolean estaPulsado(float x, float y) {
+        boolean estaPulsado = false;
+
+        if (x <= (getX() + getAncho() / 2) && x >= (getX() - getAncho() / 2)
+                && y <= (getY() + getAlto() / 2) && y >= (getY() - getAlto() / 2)) {
+            estaPulsado = true;
+        }
+        return estaPulsado;
     }
 }
