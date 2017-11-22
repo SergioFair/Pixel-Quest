@@ -19,7 +19,7 @@ public class ControlVida extends Modelo {
     public ControlVida(Context context){
         super(context, GameView.pantallaAlto*0.1,GameView.pantallaAncho*0.1
                 , 40, 40);
-        this.vidaJugador = 1;
+        this.vidaJugador = 10;
         this.vidaEnemigo = 10;
     }
 
