@@ -41,4 +41,8 @@ public class MensajePausa extends Modelo {
                 + getAncho(), yArriva + getAlto());
         imagen.draw(canvas);
     }
+
+    public void setImagen(Drawable imagen){
+        this.imagen = imagen;
+    }
 }

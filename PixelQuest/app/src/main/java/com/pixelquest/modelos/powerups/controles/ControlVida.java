@@ -19,7 +19,7 @@ public class ControlVida extends Modelo {
     public ControlVida(Context context){
         super(context, GameView.pantallaAlto*0.1,GameView.pantallaAncho*0.1
                 , 40, 40);
-        this.vidaJugador = 10;
+        this.vidaJugador = 1;
         this.vidaEnemigo = 10;
     }
 
@@ -50,5 +50,13 @@ public class ControlVida extends Modelo {
         paint.setTextSize(GameView.pantallaAlto/10);
         canvas.drawText(String.valueOf(this.vidaEnemigo), (int) (GameView.pantallaAncho*0.9)
                 , (int) getY(), paint);
+    }
+
+    public int getVidaJugador() {
+        return vidaJugador;
+    }
+
+    public int getVidaEnemigo() {
+        return vidaEnemigo;
     }
 }

@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.pixelquest.configuracion.GestorTropas;
+import com.pixelquest.gestores.CargadorGraficos;
 import com.pixelquest.modelos.Nivel;
 import com.pixelquest.modelos.powerups.controles.ControlMana;
 import com.pixelquest.modelos.powerups.controles.ControlVida;
@@ -60,7 +61,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void nivelCompleto() throws Exception {
-        if (nivel.getNivelActual() < 1) { // Número Máximo de Nivel
+        if (nivel.getNivelActual() < 1) {
             nivel.aumentarNivel();
         } else {
             nivel.setNivelActual(0);
@@ -103,7 +104,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
         }
 
-        procesarEventosTouch();
+        try {
+            procesarEventosTouch();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -115,7 +120,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     float x[] = new float[6];
     float y[] = new float[6];
 
-    public void procesarEventosTouch() {
+    public void procesarEventosTouch() throws Exception {
 
         for (int i = 0; i < 6; i++) {
             if (accion[i] != NO_ACTION) {
@@ -123,6 +128,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     if (nivel.isNivelPausado()) {
                         nivel.setNivelPausado(false);
                         inicializarTareas();
+                        if(nivel.isNivelFinalizado()) {
+                            cancelarTareas();
+                            inicializar();
+                        }
                     } else {
                         for (BotonTropa bt : botonesTropas)
                             if (bt.estaPulsado(x[i], y[i])) {
@@ -322,6 +331,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public ControlMana getControlMana() {
         return controlMana;
+    }
+
+    public void jugadorPierde(){
+        mensajePausa.setImagen(CargadorGraficos.cargarDrawable(context,R.drawable.you_lose));
+        nivel.setNivelFinalizado(true);
+    }
+
+    public void jugadorGana(){
+        mensajePausa.setImagen(CargadorGraficos.cargarDrawable(context,R.drawable.you_win));
+        nivel.setNivelFinalizado(true);
     }
 }
 

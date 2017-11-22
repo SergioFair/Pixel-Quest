@@ -52,7 +52,7 @@ public class GameLoop extends Thread {
                                 - tiempoAlInicio;
                         tiempoEspera = (int) (FRAME_TIEMPO - tiempoDiferencial);
 
-                        /*if (tiempoEspera > 0) {
+                        if (tiempoEspera > 0) {
                             try {
                                 // Util para ahorrar bateria
                                 Log.v("GameLoop","GameLoop - Tiempo de espera "+tiempoEspera);
@@ -60,7 +60,7 @@ public class GameLoop extends Thread {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                        }*/
+                        }
 
                         // falta tiempo
                         while (tiempoEspera < 0

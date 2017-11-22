@@ -15,12 +15,10 @@ import com.pixelquest.modelos.tropas.Flecha;
 import com.pixelquest.modelos.tropas.Tropa;
 import com.pixelquest.modelos.tropas.aliadas.TropaDistanciaAliada;
 import com.pixelquest.modelos.tropas.enemigas.TropaDistanciaEnemigo;
-import com.pixelquest.modelos.tropas.enemigas.TropaLigeraEnemigo;
 import com.pixelquest.modelos.visual.Fondo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,6 +35,7 @@ public class Nivel {
     private List<Flecha> proyectiles;
     private PowerUpMana pUpMana;
     private PowerUpVida pUpVida;
+    private boolean nivelFinalizado;
 
     public Nivel(Context context){
         this.context = context;
@@ -50,6 +49,7 @@ public class Nivel {
         fondo = new Fondo(context, CargadorGraficos.cargarBitmap(context,
                 R.drawable.background_field), 0);
         this.nivelPausado = false;
+        nivelFinalizado = false;
         this.nivelActual = 1;
     }
 
@@ -126,8 +126,11 @@ public class Nivel {
                     if (tropa.getEstado() == Estados.DESTRUIDO
                             || tropa.getEstado() == Estados.CRUZANDO) {
                         iterator.remove();
-                        if(tropa.getEstado() == Estados.CRUZANDO)
+                        if(tropa.getEstado() == Estados.CRUZANDO) {
                             gameView.getControlVida().reducirVidaJugador();
+                            if(gameView.getControlVida().getVidaJugador() <= 0)
+                                gameView.jugadorPierde();
+                        }
                     }
                 }
             }
@@ -139,8 +142,11 @@ public class Nivel {
                     if (tropa.getEstado() == Estados.DESTRUIDO
                             || tropa.getEstado() == Estados.CRUZANDO) {
                         iterator.remove();
-                        if(tropa.getEstado() == Estados.CRUZANDO)
+                        if(tropa.getEstado() == Estados.CRUZANDO){
                             gameView.getControlVida().reducirVidaEnemigo();
+                            if(gameView.getControlVida().getVidaEnemigo() <= 0)
+                                gameView.jugadorGana();
+                        }
                     }
                 }
             }
@@ -238,5 +244,14 @@ public class Nivel {
 
     public List<Tropa> getEnemigos() {
         return enemigos;
+    }
+
+    public boolean isNivelFinalizado() {
+        return nivelFinalizado;
+    }
+
+    public void setNivelFinalizado(boolean nivelFinalizado) {
+        setNivelPausado(nivelFinalizado);
+        this.nivelFinalizado = nivelFinalizado;
     }
 }
